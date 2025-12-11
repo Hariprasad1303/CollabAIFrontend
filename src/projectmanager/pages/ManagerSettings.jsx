@@ -8,6 +8,10 @@ const ManagerSettings = () => {
   const [profile, setProfile] = useState(true);
   const [notifications, setNotifications] = useState(false);
   const [security, setSecurity] = useState(false);
+  const [emailOn,setEmailOn]=useState(false);
+  const [taskOn,setTaskOn]=useState(false);
+  const [projectOn,setProjectOn]=useState(false);
+  const [summaryOn,setSummaryOn]=useState(false);
   return (
     // Tabs creation
     <div className="flex flex-col items-start">
@@ -159,14 +163,90 @@ const ManagerSettings = () => {
               </div>
               {/* Svae Changes BUtton */}
               <div>
-                <button className="bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)] text-white px-5 py-3 font-bold rounded-lg">Save Changes</button>
+                <button className="bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)] text-white px-5 py-3 font-bold rounded-lg">
+                  Save Changes
+                </button>
               </div>
             </form>
           </div>
         </div>
       )}
-      {notifications && <div>Notifications</div>}
-      {security && <div>Security</div>}
+      {notifications && (
+        <div className="border border-gray-300 w-3/5 p-4">
+          <h2 className="text-2xl text-[#0F172A] font-bold mb-2">
+            Notification Preferences
+          </h2>
+          <p className="text-lg text-[#64748B]">
+            Choose how you want to be notified
+          </p>
+          <div className="flex flex-col gap-6 mt-6">
+            <div className="flex justify-between items-center">
+              <div>
+                <h3 className="text-lg text-[#0F172A] font-bold">
+                  Email Notifications
+                </h3>
+                <p className="text-md text-[#64748B]">
+                  Receive notifications via email
+                </p>
+              </div>
+              <div>
+               <button onClick={()=>setEmailOn(!emailOn)} className={`relative h-8 w-16 inline-flex items-center rounded-full transition-all duration-300 ${emailOn?"bg-purple-600 shadow-lg":"bg-gray-300"}`}>
+                  <span className={`absolute h-7 w-7 rounded-full bg-white shadow-md transform transition-all duration-300 ${emailOn?"translate-x-8":"translate-x-1"}`}></span>
+               </button> 
+              </div>
+            </div>
+            <div className="flex justify-between items-center">
+              <div>
+                <h3 className="text-lg text-[#0F172A] font-bold">
+                  Task Updates
+                </h3>
+                <p className="text-md text-[#64748B]">
+                  Get notified when tasks are updated
+                </p>
+              </div>
+              <div>
+                <button onClick={()=>setTaskOn(!taskOn)} className={`relative w-16 h-8 items-center inline-flex rounded-full transform transition-all duration-300 ${taskOn?"bg-purple-600 shadow-lg":"bg-gray-300"}`}>
+                  <span className={`absolute w-7 h-7 rounded-full bg-white shadow-md transition-all duration-300 ${taskOn?"translate-x-8":"translate-x-1"}`}></span>
+                </button>
+              </div>
+            </div>
+            <div className="flex justify-between items-center">
+              <div>
+                <h3 className="text-lg text-[#0F172A] font-bold">
+                  Project Mentions
+                </h3>
+                <p className="text-md text-[#64748B]">
+                  Get notified when you're mentioned
+                </p>
+              </div>
+              <div>
+                <button onClick={()=>setProjectOn(!projectOn)} className={`relative w-16 h-8 rounded-full transition-all duration-300 inline-flex items-center ${projectOn?"bg-purple-600 shadow-lg":"bg-gray-300"}`}>
+                  <span className={`absolute h-7 w-7 bg-white rounded-full transition-all duration-300 ${projectOn?"translate-x-8":"translate-x-1"}`}></span>
+                </button>
+              </div>
+            </div>
+            <div className="flex justify-between items-center">
+              <div>
+                <h3 className="text-lg text-[#0F172A] font-bold">
+                  Weekly Summary
+                </h3>
+                <p className="text-md text-[#64748B]">
+                  Receive weekly productivity report
+                </p>
+              </div>
+              <div>
+                <button onClick={()=>setSummaryOn(!summaryOn)} className={`inline-flex items-center relative w-16 h-8 rounded-full transition-all duration-300 ${summaryOn?"bg-purple-600 shadow-lg":"bg-gray-300"}`}>
+                  <span className={`absolute h-7 w-7 bg-white rounded-full transition-all duration-300 ${summaryOn?"translate-x-8":"translate-x-1"}`}></span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {security && 
+      <div className="border border-gray-300 w-3/5 p-4">
+          
+      </div>}
     </div>
   );
 };
