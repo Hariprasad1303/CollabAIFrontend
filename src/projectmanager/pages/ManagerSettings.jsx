@@ -8,10 +8,10 @@ const ManagerSettings = () => {
   const [profile, setProfile] = useState(true);
   const [notifications, setNotifications] = useState(false);
   const [security, setSecurity] = useState(false);
-  const [emailOn,setEmailOn]=useState(false);
-  const [taskOn,setTaskOn]=useState(false);
-  const [projectOn,setProjectOn]=useState(false);
-  const [summaryOn,setSummaryOn]=useState(false);
+  const [emailOn, setEmailOn] = useState(false);
+  const [taskOn, setTaskOn] = useState(false);
+  const [projectOn, setProjectOn] = useState(false);
+  const [summaryOn, setSummaryOn] = useState(false);
   return (
     // Tabs creation
     <div className="flex flex-col items-start">
@@ -161,7 +161,7 @@ const ManagerSettings = () => {
                   className="w-full border border-[#64748B]  p-2 text-sm font-bold rounded-lg focus:outline-none focus:border-transparent focus:ring-2 focus:ring-purple-500"
                 />
               </div>
-              {/* Svae Changes BUtton */}
+              {/* Save Changes BUtton */}
               <div>
                 <button className="bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)] text-white px-5 py-3 font-bold rounded-lg">
                   Save Changes
@@ -190,9 +190,18 @@ const ManagerSettings = () => {
                 </p>
               </div>
               <div>
-               <button onClick={()=>setEmailOn(!emailOn)} className={`relative h-8 w-16 inline-flex items-center rounded-full transition-all duration-300 ${emailOn?"bg-purple-600 shadow-lg":"bg-gray-300"}`}>
-                  <span className={`absolute h-7 w-7 rounded-full bg-white shadow-md transform transition-all duration-300 ${emailOn?"translate-x-8":"translate-x-1"}`}></span>
-               </button> 
+                <button
+                  onClick={() => setEmailOn(!emailOn)}
+                  className={`relative h-8 w-16 inline-flex items-center rounded-full transition-all duration-300 ${
+                    emailOn ? "bg-purple-600 shadow-lg" : "bg-gray-300"
+                  }`}
+                >
+                  <span
+                    className={`absolute h-7 w-7 rounded-full bg-white shadow-md transform transition-all duration-300 ${
+                      emailOn ? "translate-x-8" : "translate-x-1"
+                    }`}
+                  ></span>
+                </button>
               </div>
             </div>
             <div className="flex justify-between items-center">
@@ -205,8 +214,17 @@ const ManagerSettings = () => {
                 </p>
               </div>
               <div>
-                <button onClick={()=>setTaskOn(!taskOn)} className={`relative w-16 h-8 items-center inline-flex rounded-full transform transition-all duration-300 ${taskOn?"bg-purple-600 shadow-lg":"bg-gray-300"}`}>
-                  <span className={`absolute w-7 h-7 rounded-full bg-white shadow-md transition-all duration-300 ${taskOn?"translate-x-8":"translate-x-1"}`}></span>
+                <button
+                  onClick={() => setTaskOn(!taskOn)}
+                  className={`relative w-16 h-8 items-center inline-flex rounded-full transform transition-all duration-300 ${
+                    taskOn ? "bg-purple-600 shadow-lg" : "bg-gray-300"
+                  }`}
+                >
+                  <span
+                    className={`absolute w-7 h-7 rounded-full bg-white shadow-md transition-all duration-300 ${
+                      taskOn ? "translate-x-8" : "translate-x-1"
+                    }`}
+                  ></span>
                 </button>
               </div>
             </div>
@@ -220,8 +238,17 @@ const ManagerSettings = () => {
                 </p>
               </div>
               <div>
-                <button onClick={()=>setProjectOn(!projectOn)} className={`relative w-16 h-8 rounded-full transition-all duration-300 inline-flex items-center ${projectOn?"bg-purple-600 shadow-lg":"bg-gray-300"}`}>
-                  <span className={`absolute h-7 w-7 bg-white rounded-full transition-all duration-300 ${projectOn?"translate-x-8":"translate-x-1"}`}></span>
+                <button
+                  onClick={() => setProjectOn(!projectOn)}
+                  className={`relative w-16 h-8 rounded-full transition-all duration-300 inline-flex items-center ${
+                    projectOn ? "bg-purple-600 shadow-lg" : "bg-gray-300"
+                  }`}
+                >
+                  <span
+                    className={`absolute h-7 w-7 bg-white rounded-full transition-all duration-300 ${
+                      projectOn ? "translate-x-8" : "translate-x-1"
+                    }`}
+                  ></span>
                 </button>
               </div>
             </div>
@@ -235,18 +262,88 @@ const ManagerSettings = () => {
                 </p>
               </div>
               <div>
-                <button onClick={()=>setSummaryOn(!summaryOn)} className={`inline-flex items-center relative w-16 h-8 rounded-full transition-all duration-300 ${summaryOn?"bg-purple-600 shadow-lg":"bg-gray-300"}`}>
-                  <span className={`absolute h-7 w-7 bg-white rounded-full transition-all duration-300 ${summaryOn?"translate-x-8":"translate-x-1"}`}></span>
+                <button
+                  onClick={() => setSummaryOn(!summaryOn)}
+                  className={`inline-flex items-center relative w-16 h-8 rounded-full transition-all duration-300 ${
+                    summaryOn ? "bg-purple-600 shadow-lg" : "bg-gray-300"
+                  }`}
+                >
+                  <span
+                    className={`absolute h-7 w-7 bg-white rounded-full transition-all duration-300 ${
+                      summaryOn ? "translate-x-8" : "translate-x-1"
+                    }`}
+                  ></span>
                 </button>
               </div>
             </div>
           </div>
         </div>
       )}
-      {security && 
-      <div className="border border-gray-300 w-3/5 p-4">
-          
-      </div>}
+      {security && (
+        <div className="border border-gray-300 w-3/5 p-4">
+          <h2 className="text-2xl text-[#0F172A] font-bold mb-2">
+            Security Settings
+          </h2>
+          <p className="text-lg text-[#64748B]">
+            Manage your password and security preferences
+          </p>
+          <div>
+            <form className="p-4 flex flex-col justify-between gap-y-5 my-5">
+              {/* Current Password */}
+              <div>
+                <label
+                  className="block text-[#0F172A] font-bold text-lg mb-1"
+                  htmlFor="email"
+                >
+                  Current Password
+                </label>
+                <input
+                  type="text"
+                  placeholder=""
+                  id="email"
+                  className="w-full border border-[#64748B]  p-2 text-sm font-bold rounded-lg focus:outline-none focus:border-transparent focus:ring-2 focus:ring-purple-500"
+                />
+              </div>
+              {/* New Password */}
+              <div>
+                <label
+                  htmlFor="role"
+                  className="block text-[#0F172A] font-bold text-lg mb-1"
+                >
+                  New Password
+                </label>
+                <input
+                  type="text"
+                  placeholder=""
+                  id="role"
+                  className="w-full border border-[#64748B]  p-2 text-sm font-bold rounded-lg focus:outline-none focus:border-transparent focus:ring-2 focus:ring-purple-500"
+                />
+              </div>
+              {/* Confirm passord  */}
+              <div>
+                <label
+                  htmlFor="role"
+                  className="block text-[#0F172A] font-bold text-lg mb-1"
+                >
+                  Confirm passord
+                </label>
+                <input
+                  type="text"
+                  placeholder=""
+                  id="role"
+                  className="w-full border border-[#64748B]  p-2 text-sm font-bold rounded-lg focus:outline-none focus:border-transparent focus:ring-2 focus:ring-purple-500"
+                />
+              </div>
+              {/* update password button */}
+              <div className="mt-4">
+                <button className="bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)] text-white px-5 py-3 font-bold rounded-lg">
+                  Update password
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
