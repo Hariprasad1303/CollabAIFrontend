@@ -3,7 +3,9 @@ import React from 'react'
 const ManagerAnalytics = () => {
   return (
     <>
-     Analaytics 
+     <div>
+      
+     </div>
     </>
   )
 }

@@ -6,23 +6,40 @@ import { Form } from "react-router-dom";
 const ManagerProjects = () => {
   const [modalOpen, setModalOpen] = useState(false);
   return (
-    <div className="flex flex-col gap-3 p-4">
-      <div className="flex flex-col md:flex-row items-center justify-start md:justify-between gap-4">
+    <div className="flex flex-col gap-3 p-4 w-full">
+      <div className=" flex-3 flex flex-col md:flex-row items-center justify-start md:justify-between gap-4">
         <div className="flex flex-col  gap-2">
-          <h2 className="text-3xl font-extrabold text-center text-[#0F172A]">
+          <h2 className="text-3xl font-extrabold text-[#0F172A]">
             Projects
           </h2>
           <p className="text-[#64748B]">Manage and track all your projects</p>
         </div>
-
         {/* New Project button */}
-        <button
+         <button
           onClick={() => setModalOpen(!modalOpen)}
           className="bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)] text-md md:text-xl text-white font-bold px-5 py-3 rounded-lg"
         >
           Project
           <FontAwesomeIcon icon={faPlus} className="text-white mx-2" />
-        </button>
+         </button>
+      </div>
+      <div className=" flex-1 flex justify-between items-center gap-4 mt-4">
+        <div className="flex-3">
+          <input
+            type="text"
+            placeholder="Search projects"
+            className="border-2 w-full p-3  border-gray-300"
+          />
+        </div>
+        <div className="flex-1 w-full">
+          {/* use select for clearer UX */}
+          <select className="border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-500 outline-none">
+            <option className="bg-purple-600 hover:bg-pink-500 text-white text-md font-semibold p-2" value="">Select priority</option>
+            <option className="bg-purple-600 hover:bg-pink-500 text-white text-md font-semibold p-2" value="high">High</option>
+            <option className="bg-purple-600 hover:bg-pink-500 text-white text-md font-semibold p-2" value="medium">Medium</option>
+            <option className="bg-purple-600 hover:bg-pink-500 text-white text-md font-semibold p-2" value="low">Low</option>
+          </select>
+        </div>
       </div>
       {/* Modal  start*/}
       {modalOpen && (
@@ -101,27 +118,6 @@ const ManagerProjects = () => {
         </div>
       )}
       {/* Modal End */}
-      <div className="flex justify-between items-center gap-4 mt-4">
-        <div className="flex-3">
-          <input
-            type="text"
-            placeholder="Search projects"
-            className="border-2 w-full p-3  border-gray-300"
-          />
-        </div>
-        <div className="flex-1 w-full">
-          {/* <label className="block text-gray-700 font-semibold mb-2">
-            Priority
-          </label> */}
-          {/* use select for clearer UX */}
-          <select className="border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-500 outline-none">
-            <option value="">Select priority</option>
-            <option value="high">High</option>
-            <option value="medium">Medium</option>
-            <option value="low">Low</option>
-          </select>
-        </div>
-      </div>
     </div>
   );
 };
