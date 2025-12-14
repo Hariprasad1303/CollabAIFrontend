@@ -6,3 +6,6 @@ body{
   scroll-behavior:smooth;
   overflow-x: hidden;
 }
+svg:focus{
+  outline:none;
+}
