@@ -3,6 +3,7 @@ import {
   faArrowTrendUp,
   faArrowUp,
   faChartColumn,
+  faChartLine,
   faCircleCheck,
   faClock,
   faDiagramProject,
@@ -24,6 +25,8 @@ import {
   Tooltip,
   XAxis,
   YAxis,
+  AreaChart,
+  Area
 } from "recharts";
 
 const ManagerAnalytics = () => {
@@ -75,6 +78,14 @@ const ManagerAnalytics = () => {
     { priority: "Medium", value: 15 },
     { priority: "Low", value: 12 },
   ];
+  const areaChartdata = [
+    { month: "Jul", main: 45, small: 2 },
+    { month: "Aug", main: 60, small: 3 },
+    { month: "Sep", main: 78, small: 4 },
+    { month: "Oct", main: 55, small: 3 },
+    { month: "Nov", main: 92, small: 5 },
+    { month: "Dec", main: 68, small: 4 },
+  ];
   return (
     <>
       <div className="flex flex-col gap-6">
@@ -100,7 +111,9 @@ const ManagerAnalytics = () => {
               <h4 className="text-gray-600 font-bold text-md md:text-lg">
                 Total Projects
               </h4>
-              <span className="text-[#0F172A] text-4xl md:text-5xl font-extrabold">7</span>
+              <span className="text-[#0F172A] text-4xl md:text-5xl font-extrabold">
+                7
+              </span>
               <p className="text-green-600 mt-2">
                 <FontAwesomeIcon
                   icon={faArrowUp}
@@ -122,7 +135,9 @@ const ManagerAnalytics = () => {
               <h4 className="text-gray-600 font-bold text-md md:text-lg">
                 Tasks Completed
               </h4>
-              <span className="text-[#0F172A] text-4xl md:text-5xl font-extrabold">48</span>
+              <span className="text-[#0F172A] text-4xl md:text-5xl font-extrabold">
+                48
+              </span>
               <p className="text-green-600 mt-2">
                 <FontAwesomeIcon
                   icon={faArrowUp}
@@ -144,7 +159,9 @@ const ManagerAnalytics = () => {
               <h4 className="text-gray-600 font-bold text-md md:text-lg">
                 Total Projects
               </h4>
-              <span className="text-[#0F172A] text-4xl md:text-5xl font-extrabold">12</span>
+              <span className="text-[#0F172A] text-4xl md:text-5xl font-extrabold">
+                12
+              </span>
               <p className="text-gray-500 mt-2">
                 <FontAwesomeIcon
                   icon={faUsers}
@@ -318,7 +335,9 @@ const ManagerAnalytics = () => {
             <div className="flex flex-col w-full gap-6">
               <div className="flex flex-col gap-1.5">
                 <div className="flex justify-between items-center">
-                  <h5 className="text-[#0F172A] text-md md:text-lg font-bold">Alice</h5>
+                  <h5 className="text-[#0F172A] text-md md:text-lg font-bold">
+                    Alice
+                  </h5>
                   <div className="flex items-center gap-4">
                     <span className="text-[#0F172A] text-xs md:text-sm font-semibold">
                       24 tasks
@@ -334,7 +353,9 @@ const ManagerAnalytics = () => {
               </div>
               <div className="flex flex-col gap-1.5">
                 <div className="flex justify-between items-center">
-                  <h5 className="text-[#0F172A] text-md md:text-lg font-bold">Bob</h5>
+                  <h5 className="text-[#0F172A] text-md md:text-lg font-bold">
+                    Bob
+                  </h5>
                   <div className="flex items-center gap-4">
                     <span className="text-[#0F172A] text-xs md:text-sm font-semibold">
                       17 tasks
@@ -350,7 +371,9 @@ const ManagerAnalytics = () => {
               </div>
               <div className="flex flex-col gap-1.5">
                 <div className="flex justify-between items-center">
-                  <h5 className="text-[#0F172A] text-md md:text-lg font-bold">Alice</h5>
+                  <h5 className="text-[#0F172A] text-md md:text-lg font-bold">
+                    Alice
+                  </h5>
                   <div className="flex items-center gap-4">
                     <span className="text-[#0F172A] text-xs md:text-sm font-semibold">
                       19 tasks
@@ -366,7 +389,9 @@ const ManagerAnalytics = () => {
               </div>
               <div className="flex flex-col gap-1.5">
                 <div className="flex justify-between items-center">
-                  <h5 className="text-[#0F172A] text-md md:text-lg font-bold">Alice</h5>
+                  <h5 className="text-[#0F172A] text-md md:text-lg font-bold">
+                    Alice
+                  </h5>
                   <div className="flex items-center gap-4">
                     <span className="text-[#0F172A] text-xs md:text-sm font-semibold">
                       14 tasks
@@ -382,7 +407,9 @@ const ManagerAnalytics = () => {
               </div>
               <div className="flex flex-col gap-1.5">
                 <div className="flex justify-between items-center">
-                  <h5 className="text-[#0F172A] text-md md:text-lg font-bold">Alice</h5>
+                  <h5 className="text-[#0F172A] text-md md:text-lg font-bold">
+                    Alice
+                  </h5>
                   <div className="flex items-center gap-4">
                     <span className="text-[#0F172A] text-xs md:text-sm font-semibold">
                       27 tasks
@@ -427,44 +454,92 @@ const ManagerAnalytics = () => {
             </div>
           </div>
         </div>
+        {/* Monthly trend */}
+        <div className="flex flex-col gap-4 border-2 border-gray-200 shadow-md bg-white">
+          <div className="flex items-center justify-start gap-4 mb-6 p-4">
+            <FontAwesomeIcon
+              icon={faChartLine}
+              className="text-purple-600 text-3xl"
+            />
+            <h4 className="text-2xl md:text-3xl text-[#0F172A] font-bold">
+              Monthly Trend (Last 6 Months)
+            </h4>
+          </div>
+          <div className="h-[400px]">
+            <ResponsiveContainer width="100%" height={300}>
+                <AreaChart data={areaChartdata}>
+                  <defs>
+                    <linearGradient id="purposeFill" x1="0" y1="0" x2="0" y2="1" >
+                      <stop offset="0%" stopColor="#7c3aed" stopOpacity={0.3}/>
+                      <stop offset="100%" stopColor="#7c3aed" stopOpacity={0.05}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3"/>
+                  <XAxis dataKey="month"/>
+                  <YAxis/>
+                  <Tooltip/>
+                  <Area type="monotone" dataKey="main" stroke="#7c3aed" fill="url(#purposeFill)" strokeWidth={2} />
+                  <Area type="monotone" dataKey="small" stroke="#ef4444" fill="none" strokeWidth={2}/>
+                </AreaChart>    
+            </ResponsiveContainer>
+          </div>
+        </div>
         {/*AI Insights */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 bg-purple-100 border-2 border-purple-300 p-6 rounded-lg">
           {/* Ai Insights card1  */}
           <div className="flex-1 flex flex-col justify-between w-full md:4/12 p-6 shadow-md bg-white border-gray-300 border gap-3 rounded-md">
             <div className="flex gap-1">
-              <FontAwesomeIcon icon={faArrowTrendUp} className="text-green-600 text-md md:text-lg font-extrabold me-3 "/>
+              <FontAwesomeIcon
+                icon={faArrowTrendUp}
+                className="text-green-600 text-md md:text-lg font-extrabold me-3 "
+              />
               <h4 className="text-[#0F172A] font-bold text-lg md:text-xl">
                 Perfomance Up
               </h4>
             </div>
             <div>
-               <p className="text-justify text-sm text-[#64748B]">Team productivity increased by 15% this week. Alice and Eve are top performers.</p>     
+              <p className="text-justify text-sm text-[#64748B]">
+                Team productivity increased by 15% this week. Alice and Eve are
+                top performers.
+              </p>
             </div>
           </div>
           {/*AI Insights card 2 */}
           <div className="flex-1 flex flex-col justify-between w-full md:4/12 p-6 shadow-md bg-white border-gray-300 border gap-3 rounded-md">
             <div className="flex gap-1">
-              <FontAwesomeIcon icon={faArrowTrendUp} className="text-orange-600 text-lg md:text-xl font-extrabold me-3 "/>
+              <FontAwesomeIcon
+                icon={faArrowTrendUp}
+                className="text-orange-600 text-lg md:text-xl font-extrabold me-3 "
+              />
               <h4 className="text-[#0F172A] font-bold text-md md:text-lg">
                 Attention needed
               </h4>
             </div>
             <div>
-               <p className="text-justify text-sm text-[#64748B]">Based on velocity, current sprint can accommodate 2 more medium-priority tasks.</p>     
+              <p className="text-justify text-sm text-[#64748B]">
+                Based on velocity, current sprint can accommodate 2 more
+                medium-priority tasks.
+              </p>
             </div>
           </div>
           {/*AI insights card3 */}
           <div className="flex-1 flex flex-col justify-between w-full md:4/12 p-6 shadow-md bg-white border-gray-300 border gap-3 rounded-md">
             <div className="flex gap-1">
-              <FontAwesomeIcon icon={faLightbulb} className="text-purple-600 text-md md:text-lg font-extrabold me-3 "/>
+              <FontAwesomeIcon
+                icon={faLightbulb}
+                className="text-purple-600 text-md md:text-lg font-extrabold me-3 "
+              />
               <h4 className="text-[#0F172A] font-bold text-md md:text-lg">
-               Recommendation
+                Recommendation
               </h4>
             </div>
             <div>
-               <p className="text-justify text-sm text-[#64748B]">Based on velocity, current sprint can accommodate 2 more medium-priority tasks.</p>     
+              <p className="text-justify text-sm text-[#64748B]">
+                Based on velocity, current sprint can accommodate 2 more
+                medium-priority tasks.
+              </p>
             </div>
-          </div>          
+          </div>
         </div>
       </div>
     </>
