@@ -1,5 +1,6 @@
 import {
   faArrowDown,
+  faArrowTrendUp,
   faArrowUp,
   faChartColumn,
   faCircleCheck,
@@ -68,6 +69,11 @@ const ManagerAnalytics = () => {
     { name: "Completed", value: 2, color: "#22C55E" },
     { name: "On Hold", value: 1, color: "#F59E0B" },
   ];
+  const priorityData = [
+    { priority: "High", value: 8 },
+    { priority: "Medium", value: 15 },
+    { priority: "Low", value: 12 },
+  ];
   return (
     <>
       <div className="flex flex-col gap-6">
@@ -86,14 +92,14 @@ const ManagerAnalytics = () => {
           </div>
         </div>
         {/* Analaytics Cards */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-3 ">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6 ">
           {/*card1  */}
-          <div className="flex-1 flex justify-between items-center p-6 shadow-md bg-linear-to-br from-violet-50 to-violet-200 opacity-75">
+          <div className="flex-1 flex justify-between items-center w-full md:3/12 p-6 shadow-md bg-linear-to-br from-violet-50 to-violet-200 border-violet-300 border">
             <div className="flex flex-col gap-1">
-              <h4 className="text-gray-600 font-bold text-lg">
+              <h4 className="text-gray-600 font-bold text-md md:text-lg">
                 Total Projects
               </h4>
-              <span className="text-[#0F172A] text-5xl font-extrabold">7</span>
+              <span className="text-[#0F172A] text-4xl md:text-5xl font-extrabold">7</span>
               <p className="text-green-600 mt-2">
                 <FontAwesomeIcon
                   icon={faArrowUp}
@@ -110,12 +116,12 @@ const ManagerAnalytics = () => {
             </div>
           </div>
           {/* card 2 */}
-          <div className="flex-1 flex justify-between items-center p-6 shadow-md bg-linear-to-br from-green-50 to-green-100">
+          <div className="flex-1 flex justify-between items-center w-full md:3/12  p-6 shadow-md bg-linear-to-br from-green-50 to-green-100 border-green-300 border">
             <div className="flex flex-col gap-1">
-              <h4 className="text-gray-600 font-bold text-lg">
+              <h4 className="text-gray-600 font-bold text-md md:text-lg">
                 Tasks Completed
               </h4>
-              <span className="text-[#0F172A] text-5xl font-extrabold">48</span>
+              <span className="text-[#0F172A] text-4xl md:text-5xl font-extrabold">48</span>
               <p className="text-green-600 mt-2">
                 <FontAwesomeIcon
                   icon={faArrowUp}
@@ -132,12 +138,12 @@ const ManagerAnalytics = () => {
             </div>
           </div>
           {/* card3 */}
-          <div className="flex-1 flex justify-between items-center p-6 shadow-md bg-linear-to-br from-pink-50 to-pink-100">
+          <div className="flex-1 flex justify-between items-center w-full md:3/12  p-6 shadow-md bg-linear-to-br from-pink-50 to-pink-100 border-pink-300 border">
             <div className="flex flex-col gap-1">
-              <h4 className="text-gray-600 font-bold text-lg">
+              <h4 className="text-gray-600 font-bold text-md md:text-lg">
                 Total Projects
               </h4>
-              <span className="text-[#0F172A] text-5xl font-extrabold">12</span>
+              <span className="text-[#0F172A] text-4xl md:text-5xl font-extrabold">12</span>
               <p className="text-gray-500 mt-2">
                 <FontAwesomeIcon
                   icon={faUsers}
@@ -154,12 +160,12 @@ const ManagerAnalytics = () => {
             </div>
           </div>
           {/* card4 */}
-          <div className="flex-1 flex justify-between items-center p-6 shadow-md bg-linear-to-br from-cyan-50 to-cyan-100">
+          <div className="flex-1 flex justify-between items-center w-full md:3/12  p-6 shadow-md bg-linear-to-br from-cyan-50 to-cyan-100 border-cyan-300 border">
             <div className="flex flex-col gap-1">
-              <h4 className="text-gray-600 font-bold text-lg">
+              <h4 className="text-gray-600 font-bold text-md md:text-lg">
                 Total Projects
               </h4>
-              <span className="text-[#0F172A] text-5xl font-extrabold">
+              <span className="text-[#0F172A] text-4xl md:text-5xl font-extrabold">
                 4.2d
               </span>
               <p className="text-green-500 mt-2">
@@ -179,15 +185,15 @@ const ManagerAnalytics = () => {
           </div>
         </div>
         {/* Recharts Elements */}
-        <div className="flex flex-col md:flex-row  items-center justify-between gap-4">
-          <div className="flex-1 flex flex-col border-2 border-gray-200 shadow-md bg-white">
+        <div className="flex flex-col md:flex-row  items-center justify-between gap-4 mt-4">
+          <div className="flex-1 flex w-full flex-col md:6/12 border-2 border-gray-200 shadow-md bg-white">
             {/* weekly progress heading */}
             <div className="flex items-center justify-start gap-4 mb-6 p-4">
               <FontAwesomeIcon
                 icon={faChartColumn}
                 className="text-purple-600 text-3xl"
               />
-              <h4 className="text-3xl text-[#0F172A] font-bold">
+              <h4 className="text-2xl md:text-3xl text-[#0F172A] font-bold">
                 Weekly task Process
               </h4>
             </div>
@@ -213,14 +219,14 @@ const ManagerAnalytics = () => {
               </BarChart>
             </div>
           </div>
-          <div className="flex-1 flex flex-col border-2 border-gray-200 shadow-md bg-white">
+          <div className="flex-1 flex flex-col w-full md:6/12 border-2 border-gray-200 shadow-md bg-white">
             {/*Project Status heading */}
             <div className="flex items-center justify-start gap-4 mb-6 p-4">
               <FontAwesomeIcon
                 icon={faDiagramProject}
                 className="text-purple-600 text-3xl"
               />
-              <h4 className="text-3xl text-[#0F172A] font-bold">
+              <h4 className="text-2xl md:text-3xl text-[#0F172A] font-bold">
                 Project Status
               </h4>
             </div>
@@ -295,15 +301,15 @@ const ManagerAnalytics = () => {
           </div>
         </div>
         {/* Perfomance and another anlaytical chart */}
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          <div className="flex flex-col shadow-md bg-white border border-gray-300 flex-7 p-4 gap-4">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="flex flex-col w-full md:7/12 shadow-md bg-white border border-gray-300 flex-7 p-4 gap-6">
             {/*Team perfomanace Heading */}
             <div className="flex justify-start items-center gap-3">
               <FontAwesomeIcon
                 icon={faUsers}
-                className="text-purple-600 text-3xl"
+                className="text-purple-600 text-2xl md:text-3xl"
               />
-              <h4 className="text-[#0F172A] text-3xl font-bold">
+              <h4 className="text-[#0F172A] text-2xl md:text-3xl font-bold">
                 Team Perfomanace
               </h4>
             </div>
@@ -311,91 +317,154 @@ const ManagerAnalytics = () => {
             <div className="flex flex-col w-full gap-6">
               <div className="flex flex-col gap-1.5">
                 <div className="flex justify-between items-center">
-                  <h5 className="text-[#0F172A] text-lg font-bold">Alice</h5>
+                  <h5 className="text-[#0F172A] text-md md:text-lg font-bold">Alice</h5>
                   <div className="flex items-center gap-4">
-                    <span className="text-[#0F172A] text-sm font-semibold">
+                    <span className="text-[#0F172A] text-xs md:text-sm font-semibold">
                       24 tasks
                     </span>
-                    <p className="bg-purple-600 text-white text-sm font-semibold p-2 rounded-lg flex items-center">
+                    <p className="bg-purple-600 text-white text-xs md:text-sm font-semibold p-1 md:p-2 rounded-lg flex items-center">
                       90%
                     </p>
                   </div>
                 </div>
-                <div className="bg-pink-500 relative h-3 rounded-lg">
-                  <div className=" absolute bg-purple-600 w-[90%] h-3 rounded-lg z-40"></div>
+                <div className="bg-pink-500 relative h-2.5 md:h-3 rounded-lg">
+                  <div className=" absolute bg-purple-600 w-[90%] h-2.5 md:h-3 rounded-lg z-40"></div>
                 </div>
               </div>
               <div className="flex flex-col gap-1.5">
                 <div className="flex justify-between items-center">
-                  <h5 className="text-[#0F172A] text-lg font-bold">Bob</h5>
+                  <h5 className="text-[#0F172A] text-md md:text-lg font-bold">Bob</h5>
                   <div className="flex items-center gap-4">
-                    <span className="text-[#0F172A] text-sm font-semibold">
+                    <span className="text-[#0F172A] text-xs md:text-sm font-semibold">
                       17 tasks
                     </span>
-                    <p className="bg-purple-600 text-white text-sm font-semibold p-2 rounded-lg flex items-center">
+                    <p className="bg-purple-600 text-white text-xs md:text-sm font-semibold p-1 md:p-2 rounded-lg flex items-center">
                       70%
                     </p>
                   </div>
                 </div>
-                <div className="bg-pink-500 relative h-3 rounded-lg">
-                  <div className=" absolute bg-purple-600 w-[70%] h-3 rounded-lg z-40"></div>
+                <div className="bg-pink-500 relative h-2.5 md:h-3 rounded-lg">
+                  <div className=" absolute bg-purple-600 w-[70%] h-2.5 md:h-3 rounded-lg z-40"></div>
                 </div>
               </div>
               <div className="flex flex-col gap-1.5">
                 <div className="flex justify-between items-center">
-                  <h5 className="text-[#0F172A] text-lg font-bold">Alice</h5>
+                  <h5 className="text-[#0F172A] text-md md:text-lg font-bold">Alice</h5>
                   <div className="flex items-center gap-4">
-                    <span className="text-[#0F172A] text-sm font-semibold">
+                    <span className="text-[#0F172A] text-xs md:text-sm font-semibold">
                       19 tasks
                     </span>
-                    <p className="bg-purple-600 text-white text-sm font-semibold p-2 rounded-lg flex items-center">
+                    <p className="bg-purple-600 text-white text-xs md:text-sm font-semibold p-1 md:p-2 rounded-lg flex items-center">
                       77%
                     </p>
                   </div>
                 </div>
-                <div className="bg-pink-500 relative h-3 rounded-lg">
-                  <div className=" absolute bg-purple-600 w-[77%] h-3 rounded-lg z-40"></div>
+                <div className="bg-pink-500 relative h-2.5 md:h-3 rounded-lg">
+                  <div className=" absolute bg-purple-600 w-[77%] h-2.5 md:h-3 rounded-lg z-40"></div>
                 </div>
               </div>
               <div className="flex flex-col gap-1.5">
                 <div className="flex justify-between items-center">
-                  <h5 className="text-[#0F172A] text-lg font-bold">Alice</h5>
+                  <h5 className="text-[#0F172A] text-md md:text-lg font-bold">Alice</h5>
                   <div className="flex items-center gap-4">
-                    <span className="text-[#0F172A] text-sm font-semibold">
+                    <span className="text-[#0F172A] text-xs md:text-sm font-semibold">
                       14 tasks
                     </span>
-                    <p className="bg-purple-600 text-white text-sm font-semibold p-2 rounded-lg flex items-center">
+                    <p className="bg-purple-600 text-white text-xs md:text-sm font-semibold p-1 md:p-2 rounded-lg flex items-center">
                       60%
                     </p>
                   </div>
                 </div>
-                <div className="bg-pink-500 relative h-3 rounded-lg">
-                  <div className=" absolute bg-purple-600 w-[60%] h-3 rounded-lg z-40"></div>
+                <div className="bg-pink-500 relative h-2.5 md:h-3 rounded-lg">
+                  <div className=" absolute bg-purple-600 w-[60%] h-2.5 md:h-3 rounded-lg z-40"></div>
                 </div>
               </div>
               <div className="flex flex-col gap-1.5">
                 <div className="flex justify-between items-center">
-                  <h5 className="text-[#0F172A] text-lg font-bold">Alice</h5>
+                  <h5 className="text-[#0F172A] text-md md:text-lg font-bold">Alice</h5>
                   <div className="flex items-center gap-4">
-                    <span className="text-[#0F172A] text-sm font-semibold">
+                    <span className="text-[#0F172A] text-xs md:text-sm font-semibold">
                       27 tasks
                     </span>
-                    <p className="bg-purple-600 text-white text-sm font-semibold p-2 rounded-lg flex items-center">
+                    <p className="bg-purple-600 text-white text-xs md:text-sm font-semibold p-1 md:p-2 rounded-lg flex items-center">
                       96%
                     </p>
                   </div>
                 </div>
-                <div className="bg-pink-500 relative h-3 rounded-lg">
-                  <div className=" absolute bg-purple-600 w-[96%] h-3 rounded-lg z-40"></div>
+                <div className="bg-pink-500 relative h-2.5 md:h-3 rounded-lg">
+                  <div className=" absolute bg-purple-600 w-[96%] h-2.5 md:h-3 rounded-lg z-40"></div>
                 </div>
               </div>
             </div>
           </div>
-          <div className="shadow-md bg-white border border-gray-300 flex-5">
-            2
+          <div className="flex flex-col w-full md:5/12 shadow-md bg-white border border-gray-300 flex-5">
+            {/* Task priority Heading */}
+            <div className="flex items-center justify-start gap-4 mb-6 p-4">
+              <FontAwesomeIcon
+                icon={faArrowTrendUp}
+                className="text-purple-600 text-2xl md:text-3xl"
+              />
+              <h4 className="text-2xl md:text-3xl text-[#0F172A] font-bold">
+                Task priority
+              </h4>
+            </div>
+            {/* task priority chart */}
+            <div className="h-[360px]">
+              <ResponsiveContainer height="70%" width="80%">
+                <BarChart
+                  data={priorityData}
+                  layout="vertical"
+                  margin={{ top: 10, bottom: 10, right: 20, left: 20 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+                  <XAxis type="number" />
+                  <YAxis dataKey="priority" type="category" width={70} />
+                  <Tooltip />
+                  <Bar dataKey="value" radius={[6, 6, 6, 6]} fill="#7c3aed" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
           </div>
         </div>
-        {/*  */}
+        {/*AI Insights */}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6 ">
+          {/* Ai Insights card1  */}
+          <div className="flex-1 flex flex-col justify-between w-full md:4/12 p-6 shadow-md bg-white border-gray-300 border gap-3">
+            <div className="flex gap-1">
+              <FontAwesomeIcon icon={faArrowTrendUp} className="text-green-600 text-md md:text-lg font-extrabold me-3 "/>
+              <h4 className="text-[#0F172A] font-bold text-md md:text-lg">
+                Perfomance Up
+              </h4>
+            </div>
+            <div>
+               <p className="text-justify text-sm text-[#64748B]">Team productivity increased by 15% this week. Alice and Eve are top performers.</p>     
+            </div>
+          </div>
+          {/*AI Insights card 2 */}
+          <div className="flex-1 flex flex-col justify-between w-full md:4/12 p-6 shadow-md bg-white border-gray-300 border gap-3">
+            <div className="flex gap-1">
+              <FontAwesomeIcon icon={faArrowTrendUp} className="text-green-600 text-md md:text-lg font-extrabold me-3 "/>
+              <h4 className="text-[#0F172A] font-bold text-md md:text-lg">
+                Perfomance Up
+              </h4>
+            </div>
+            <div>
+               <p className="text-justify text-sm text-[#64748B]">Team productivity increased by 15% this week. Alice and Eve are top performers.</p>     
+            </div>
+          </div>
+          {/*AI insights card3 */}
+          <div className="flex-1 flex flex-col justify-between w-full md:4/12 p-6 shadow-md bg-white border-gray-300 border gap-3">
+            <div className="flex gap-1">
+              <FontAwesomeIcon icon={faArrowTrendUp} className="text-green-600 text-md md:text-lg font-extrabold me-3 "/>
+              <h4 className="text-[#0F172A] font-bold text-md md:text-lg">
+                Perfomance Up
+              </h4>
+            </div>
+            <div>
+               <p className="text-justify text-sm text-[#64748B]">Team productivity increased by 15% this week. Alice and Eve are top performers.</p>     
+            </div>
+          </div>          
+        </div>
       </div>
     </>
   );
