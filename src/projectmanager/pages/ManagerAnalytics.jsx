@@ -7,6 +7,7 @@ import {
   faClock,
   faDiagramProject,
   faFolderOpen,
+  faLightbulb,
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -427,12 +428,12 @@ const ManagerAnalytics = () => {
           </div>
         </div>
         {/*AI Insights */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6 ">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6 bg-purple-100 border-2 border-purple-300 p-6 rounded-lg">
           {/* Ai Insights card1  */}
-          <div className="flex-1 flex flex-col justify-between w-full md:4/12 p-6 shadow-md bg-white border-gray-300 border gap-3">
+          <div className="flex-1 flex flex-col justify-between w-full md:4/12 p-6 shadow-md bg-white border-gray-300 border gap-3 rounded-md">
             <div className="flex gap-1">
               <FontAwesomeIcon icon={faArrowTrendUp} className="text-green-600 text-md md:text-lg font-extrabold me-3 "/>
-              <h4 className="text-[#0F172A] font-bold text-md md:text-lg">
+              <h4 className="text-[#0F172A] font-bold text-lg md:text-xl">
                 Perfomance Up
               </h4>
             </div>
@@ -441,27 +442,27 @@ const ManagerAnalytics = () => {
             </div>
           </div>
           {/*AI Insights card 2 */}
-          <div className="flex-1 flex flex-col justify-between w-full md:4/12 p-6 shadow-md bg-white border-gray-300 border gap-3">
+          <div className="flex-1 flex flex-col justify-between w-full md:4/12 p-6 shadow-md bg-white border-gray-300 border gap-3 rounded-md">
             <div className="flex gap-1">
-              <FontAwesomeIcon icon={faArrowTrendUp} className="text-green-600 text-md md:text-lg font-extrabold me-3 "/>
+              <FontAwesomeIcon icon={faArrowTrendUp} className="text-orange-600 text-lg md:text-xl font-extrabold me-3 "/>
               <h4 className="text-[#0F172A] font-bold text-md md:text-lg">
-                Perfomance Up
+                Attention needed
               </h4>
             </div>
             <div>
-               <p className="text-justify text-sm text-[#64748B]">Team productivity increased by 15% this week. Alice and Eve are top performers.</p>     
+               <p className="text-justify text-sm text-[#64748B]">Based on velocity, current sprint can accommodate 2 more medium-priority tasks.</p>     
             </div>
           </div>
           {/*AI insights card3 */}
-          <div className="flex-1 flex flex-col justify-between w-full md:4/12 p-6 shadow-md bg-white border-gray-300 border gap-3">
+          <div className="flex-1 flex flex-col justify-between w-full md:4/12 p-6 shadow-md bg-white border-gray-300 border gap-3 rounded-md">
             <div className="flex gap-1">
-              <FontAwesomeIcon icon={faArrowTrendUp} className="text-green-600 text-md md:text-lg font-extrabold me-3 "/>
+              <FontAwesomeIcon icon={faLightbulb} className="text-purple-600 text-md md:text-lg font-extrabold me-3 "/>
               <h4 className="text-[#0F172A] font-bold text-md md:text-lg">
-                Perfomance Up
+               Recommendation
               </h4>
             </div>
             <div>
-               <p className="text-justify text-sm text-[#64748B]">Team productivity increased by 15% this week. Alice and Eve are top performers.</p>     
+               <p className="text-justify text-sm text-[#64748B]">Based on velocity, current sprint can accommodate 2 more medium-priority tasks.</p>     
             </div>
           </div>          
         </div>
