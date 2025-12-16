@@ -15,12 +15,12 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const navItems = [
-  { name: "Dashboard", href: "/manager/dashboard", icon: faGauge },
-  { name: "Projects", href: "/manager/projects", icon: faFolderOpen },
-  { name: "Team", href: "/manager/team", icon: faUsers },
-  { name: "Analytics", href: "/manager/analytics", icon: faChartLine },
-  { name: "Chat", href: "/manager/chat", icon: faComments },
-  { name: "Settings", href: "/manager/settings", icon: faCog },
+  { name: "Dashboard", href: "/employee/dashboard", icon: faGauge },
+  { name: "Projects", href: "/employee/projects", icon: faFolderOpen },
+  { name: "Team", href: "/employee/team", icon: faUsers },
+  { name: "Analytics", href: "/employee/analytics", icon: faChartLine },
+  { name: "Chat", href: "/employee/chat", icon: faComments },
+  { name: "Settings", href: "/employee/settings", icon: faCog },
 ];
 
 const EmployeeSideBar = ({ collapsed, setCollapsed, mobileOpen, setMobileOpen }) => {
