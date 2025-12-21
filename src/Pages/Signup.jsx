@@ -8,6 +8,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+
 
 const Signup = () => {
   const tabs = [
@@ -16,6 +20,25 @@ const Signup = () => {
   ];
   //state for creating an tag
   const [activeTab, setActiveTab] = useState("users");
+  //state for getting data fromn user
+  const [userDetails,setUserDetails]=useState({
+    username:"",
+    email:"",
+    password:"",
+    role:""
+  });
+  //handle signup
+  const handleSignUp=()=>{
+    const {username,email,password,role}=userDetails;
+    if(!username || !email ||!password ||!role){
+      toast.success("Please fill the form");
+    }
+    else{
+      // api call
+
+    }
+  }
+  console.log(userDetails);
   return (
     <>
       <div className="w-full min-h-screen grid grid-cols-1 md:grid-cols-2">
@@ -106,6 +129,8 @@ const Signup = () => {
                             Username
                           </label>
                           <input
+                            value={userDetails.username}
+                            onChange={(e)=>{setUserDetails({...userDetails,username:e.target.value})}}
                             type="text"
                             placeholder="Hariprasad V V"
                             id="userName"
@@ -121,6 +146,8 @@ const Signup = () => {
                             Email
                           </label>
                           <input
+                            value={userDetails.email}
+                            onChange={(e)=>{setUserDetails({...userDetails,email:e.target.value})}}
                             type="email"
                             placeholder="name@example.com"
                             id="email"
@@ -136,9 +163,11 @@ const Signup = () => {
                             Password
                           </label>
                           <input
+                            value={userDetails.password}
+                            onChange={(e)=>{setUserDetails({...userDetails,password:e.target.value})}}
                             type="email"
                             placeholder="create a strong password"
-                            id="email"
+                            id="password"
                             className="w-full border border-[#64748B]  p-2 text-sm font-bold rounded-lg focus:outline-none focus:border-transparent focus:ring-2 focus:ring-purple-500"
                           />
                           <p className="text-[#64748B] font-medium mt-2 text-sm">
@@ -154,6 +183,8 @@ const Signup = () => {
                             Role
                           </label>
                           <select
+                            value={userDetails.role}
+                            onChange={(e)=>{setUserDetails({...userDetails,role:e.target.value})}}
                             id="role"
                             className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                           >
@@ -164,26 +195,24 @@ const Signup = () => {
                               Choose a Role
                             </option>
                             <option
-                              value="Manager"
+                              value="manager"
                               className="text-lg text-white font-medium bg-[#0F172A]"
                             >
-                              Project manager
+                              manager
                             </option>
                             <option
-                              value="Employee"
+                              value="employee"
                               className="text-lg text-white font-medium bg-[#0F172A]"
                             >
-                              Employee
+                              employee
                             </option>
                           </select>
                         </div>
                         {/* create button */}
                         <div className="w-full mt-4">
-                          <Link to={"/login"}>
-                            <button className="w-full bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)] text-white rounded-lg py-4 px-3 text-lg font-bold active:opacity-80  transition duration-300">
+                            <button type="button" onClick={handleSignUp} className="w-full bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)] text-white rounded-lg py-4 px-3 text-lg font-bold active:opacity-80  transition duration-300">
                               Create Account
                             </button>
-                          </Link>
                         </div>
                         <hr className="w-full border-gray-300 mt-4" />
                         {/*google nad github  */}
@@ -278,11 +307,9 @@ const Signup = () => {
                         </div>
                         {/* create account button */}
                         <div className="w-full">
-                          <Link to={"/login"}>
-                            <button className="w-full bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)] text-white rounded-lg py-4 px-3 text-lg font-bold active:opacity-80  transition duration-300">
+                            <button type="button" className="w-full bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)] text-white rounded-lg py-4 px-3 text-lg font-bold active:opacity-80  transition duration-300">
                               Create Account
                             </button>
-                          </Link>
                         </div>
                         <hr className="w-full border-gray-300 mt-4" />
                         <div className="flex justify-between items-center gap-4">
@@ -314,6 +341,7 @@ const Signup = () => {
             </div>
           </div>
         </div>
+        <ToastContainer position="top-center" theme="colored" autoClose={2000} />
       </div>
     </>
   );
