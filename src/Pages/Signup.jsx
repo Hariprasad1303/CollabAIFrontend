@@ -7,11 +7,10 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-
+import { signupAPI } from "../services/allAPI";
 
 const Signup = () => {
   const tabs = [
@@ -21,23 +20,52 @@ const Signup = () => {
   //state for creating an tag
   const [activeTab, setActiveTab] = useState("users");
   //state for getting data fromn user
-  const [userDetails,setUserDetails]=useState({
-    username:"",
-    email:"",
-    password:"",
-    role:""
+  const [userDetails, setUserDetails] = useState({
+    username: "",
+    email: "",
+    password: "",
+    role: "",
   });
+  const navigate = useNavigate();
   //handle signup
-  const handleSignUp=()=>{
-    const {username,email,password,role}=userDetails;
-    if(!username || !email ||!password ||!role){
+  const handleSignUp = async () => {
+    const { username, email, password, role } = userDetails;
+    if (!username || !email || !password || !role) {
       toast.success("Please fill the form");
-    }
-    else{
+    } else {
       // api call
-
+      const result = await signupAPI({ username, email, password, role });
+      console.log(result);
+      if (result.status == 200) {
+        toast.success("Registration Sucessfull");
+        setUserDetails({
+          email: "",
+          username: "",
+          password: "",
+          role: "",
+        });
+        setTimeout(() => {
+          if (role === "manager") {
+            navigate("/manager");
+          } else if (role === "employee") {
+            navigate("/employee");
+          } else {
+            navigate("/login");
+          }
+        }, 3000);
+      } else if (result.status == 400) {
+        toast.warning(result.response.data);
+        setUserDetails({
+          email: "",
+          username: "",
+          password: "",
+          role: "",
+        });
+      } else {
+        toast.error("Something went wrong");
+      }
     }
-  }
+  };
   console.log(userDetails);
   return (
     <>
@@ -130,7 +158,12 @@ const Signup = () => {
                           </label>
                           <input
                             value={userDetails.username}
-                            onChange={(e)=>{setUserDetails({...userDetails,username:e.target.value})}}
+                            onChange={(e) => {
+                              setUserDetails({
+                                ...userDetails,
+                                username: e.target.value,
+                              });
+                            }}
                             type="text"
                             placeholder="Hariprasad V V"
                             id="userName"
@@ -147,7 +180,12 @@ const Signup = () => {
                           </label>
                           <input
                             value={userDetails.email}
-                            onChange={(e)=>{setUserDetails({...userDetails,email:e.target.value})}}
+                            onChange={(e) => {
+                              setUserDetails({
+                                ...userDetails,
+                                email: e.target.value,
+                              });
+                            }}
                             type="email"
                             placeholder="name@example.com"
                             id="email"
@@ -164,7 +202,12 @@ const Signup = () => {
                           </label>
                           <input
                             value={userDetails.password}
-                            onChange={(e)=>{setUserDetails({...userDetails,password:e.target.value})}}
+                            onChange={(e) => {
+                              setUserDetails({
+                                ...userDetails,
+                                password: e.target.value,
+                              });
+                            }}
                             type="email"
                             placeholder="create a strong password"
                             id="password"
@@ -184,7 +227,12 @@ const Signup = () => {
                           </label>
                           <select
                             value={userDetails.role}
-                            onChange={(e)=>{setUserDetails({...userDetails,role:e.target.value})}}
+                            onChange={(e) => {
+                              setUserDetails({
+                                ...userDetails,
+                                role: e.target.value,
+                              });
+                            }}
                             id="role"
                             className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                           >
@@ -210,9 +258,13 @@ const Signup = () => {
                         </div>
                         {/* create button */}
                         <div className="w-full mt-4">
-                            <button type="button" onClick={handleSignUp} className="w-full bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)] text-white rounded-lg py-4 px-3 text-lg font-bold active:opacity-80  transition duration-300">
-                              Create Account
-                            </button>
+                          <button
+                            type="button"
+                            onClick={handleSignUp}
+                            className="w-full bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)] text-white rounded-lg py-4 px-3 text-lg font-bold active:opacity-80  transition duration-300"
+                          >
+                            Create Account
+                          </button>
                         </div>
                         <hr className="w-full border-gray-300 mt-4" />
                         {/*google nad github  */}
@@ -252,7 +304,7 @@ const Signup = () => {
                         Start your free trial today
                       </p>
                     </div>
-                    <div  className="w-full p-6 shadow-3xl rounded-2xl border border-gray-300 mt-5  shadow-purple-300">
+                    <div className="w-full p-6 shadow-3xl rounded-2xl border border-gray-300 mt-5  shadow-purple-300">
                       {/* form */}
                       <form className="p-8  flex flex-col justify-between gap-y-6">
                         {/* email */}
@@ -307,9 +359,12 @@ const Signup = () => {
                         </div>
                         {/* create account button */}
                         <div className="w-full">
-                            <button type="button" className="w-full bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)] text-white rounded-lg py-4 px-3 text-lg font-bold active:opacity-80  transition duration-300">
-                              Create Account
-                            </button>
+                          <button
+                            type="button"
+                            className="w-full bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)] text-white rounded-lg py-4 px-3 text-lg font-bold active:opacity-80  transition duration-300"
+                          >
+                            Create Account
+                          </button>
                         </div>
                         <hr className="w-full border-gray-300 mt-4" />
                         <div className="flex justify-between items-center gap-4">
@@ -341,7 +396,11 @@ const Signup = () => {
             </div>
           </div>
         </div>
-        <ToastContainer position="top-center" theme="colored" autoClose={2000} />
+        <ToastContainer
+          position="top-center"
+          theme="colored"
+          autoClose={2000}
+        />
       </div>
     </>
   );

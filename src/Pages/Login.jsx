@@ -8,7 +8,9 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { loginAPI } from "../services/allAPI";
+import { toast, ToastContainer } from "react-toastify";
 
 const Login = () => {
   //tab creation
@@ -16,6 +18,39 @@ const Login = () => {
     { id: "users", label: "Log in(User)", icon: faUsers },
     { id: "admin", label: "Log in(Admin)", icon: faUserShield },
   ];
+  const navigate=useNavigate();
+  const [userDetails, setUserDetails] = useState({
+    email: "",
+    password: "",
+  });
+  const handleLogin = async () => {
+    const { email, password } = userDetails;
+    console.log(email, password);
+    if (!email || !password) {
+      toast.info("Please Fill the form completely");
+    } else {
+      // api call
+      const result = await loginAPI({ email, password });
+      console.log(result);
+      if (result.status == 200) {
+        toast.success("Login sucessfull...");
+        sessionStorage.setItem(
+          "existingUser",
+          JSON.stringify(result.data.existingUser)
+        );
+        sessionStorage.setItem("token", JSON.stringify(result.data.token));
+        setTimeout(() => {
+          if (result.data.existingUser.role === "manager") {
+            navigate("/manager");
+          } else if (result.data.existingUser.role === "employee") {
+            navigate("/employee");
+          } else {
+            navigate("/login");
+          }
+        }, 3000);
+      }
+    }
+  };
   //state for tab creation
   const [activeTab, setActivetab] = useState("users");
   return (
@@ -31,6 +66,7 @@ const Login = () => {
                 {login.map((tab) => (
                   <button
                     onClick={() => setActivetab(tab.id)}
+                    key={tab.id}
                     className={`px-6 py-5 flex-1  text-md font-bold rounded-md transition ${
                       activeTab == tab.id
                         ? "bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)] text-white font-extrabold shadow-sm text-lg"
@@ -72,6 +108,13 @@ const Login = () => {
                           Email
                         </label>
                         <input
+                          value={userDetails.email}
+                          onChange={(e) => {
+                            setUserDetails({
+                              ...userDetails,
+                              email: e.target.value,
+                            });
+                          }}
                           type="email"
                           placeholder="name@example.com"
                           id="email"
@@ -87,9 +130,16 @@ const Login = () => {
                           Password
                         </label>
                         <input
-                          type="email"
+                          value={userDetails.password}
+                          onChange={(e) =>
+                            setUserDetails({
+                              ...userDetails,
+                              password: e.target.value,
+                            })
+                          }
+                          type="password"
                           placeholder="create a strong password"
-                          id="email"
+                          id="password"
                           className="w-full border border-[#64748B]  p-2 text-sm font-bold rounded-lg focus:outline-none focus:border-transparent focus:ring-2 focus:ring-purple-500"
                         />
                         <p className="text-[#64748B] font-medium mt-2 text-sm">
@@ -98,11 +148,13 @@ const Login = () => {
                       </div>
                       {/* sign in button */}
                       <div className="w-full mt-4">
-                        <Link to={"/login"}>
-                          <button className="w-full bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)] text-white rounded-lg py-4 px-3 text-lg font-bold active:opacity-80  transition duration-300">
-                            Create Account
-                          </button>
-                        </Link>
+                        <button
+                          type="button"
+                          onClick={handleLogin}
+                          className="w-full bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)] text-white rounded-lg py-4 px-3 text-lg font-bold active:opacity-80  transition duration-300"
+                        >
+                          Create Account
+                        </button>
                       </div>
                       <hr className="w-full border-gray-300 mt-4" />
                       {/*google nad github  */}
@@ -274,6 +326,11 @@ const Login = () => {
             </li>
           </ul>
         </div>
+        <ToastContainer
+          position="top-center"
+          theme="colored"
+          autoClose={2000}
+        />
       </div>
     </>
   );
