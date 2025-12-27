@@ -28,38 +28,51 @@ const Signup = () => {
   });
   const navigate = useNavigate();
   //handle signup
- const handleSignUp=async()=>{
-  const {username,email,password,role}=userDetails;
-  console.log(username,email,password,role);
-  if(!username || !email || !password || !role ){
-    toast.info("Please fill the form completely..");
-  }else{
-    //api call
-    const result=await signupAPI({username,email,password,role});
-    console.log(result);
-    if(result.status==200){
-      toast.success("Registration successfull")
-      setUserDetails({
-        username:"",
-        email:"",
-        password:"",
-        role:""
-      })
-     setTimeout(()=>{
-      if(result.data.role=="employee"){
-        navigate('/employee');
-      }else if(result.data.role=="manager"){
-        navigate('/manager');
-      }else{
-        navigate('/login')
-      }      
-     },2000) 
-    }else if(result.status==400){
-      toast.warning(result.response.data);
+  const handleSignUp = async () => {
+    const { username, email, password, role } = userDetails;
+    console.log(username, email, password, role);
+    if (!username || !email || !password || !role) {
+      toast.info("Please fill the form completely..");
+    } else {
+      //api call
+      const result = await signupAPI({ username, email, password, role });
+      console.log(result);
+      if (result.status == 200) {
+        toast.success("Registration successfull");
+        setUserDetails({
+          username: "",
+          email: "",
+          password: "",
+          role: "",
+        });
+        setTimeout(() => {
+          if (result.data.role == "employee") {
+            navigate("/employee");
+          } else if (result.data.role == "manager") {
+            navigate("/manager");
+          } else {
+            navigate("/login");
+          }
+        }, 2000);
+      } else if (result.status == 400) {
+        toast.warning(result.response.data);
+        setUserDetails({
+          username: "",
+          email: "",
+          password: "",
+          role: "",
+        });
+      } else {
+        toast.warning("something went wrong");
+        setUserDetails({
+          username: "",
+          email: "",
+          password: "",
+          role: "",
+        });
+      }
     }
-
-  }
- }
+  };
   console.log(userDetails);
   return (
     <>
