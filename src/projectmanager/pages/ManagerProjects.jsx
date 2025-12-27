@@ -4,24 +4,28 @@ import React, { useState } from "react";
 import { Form } from "react-router-dom";
 
 const ManagerProjects = () => {
+  const [projectDetails, setProjectDetails] = useState({
+    name: "",
+    description: "",
+    priority: "",
+    date: "",
+  });
   const [modalOpen, setModalOpen] = useState(false);
   return (
     <div className="flex flex-col gap-3 p-4 w-full">
       <div className=" flex-3 flex flex-col md:flex-row items-center justify-start md:justify-between gap-4">
         <div className="flex flex-col  gap-2">
-          <h2 className="text-3xl font-extrabold text-[#0F172A]">
-            Projects
-          </h2>
+          <h2 className="text-3xl font-extrabold text-[#0F172A]">Projects</h2>
           <p className="text-[#64748B]">Manage and track all your projects</p>
         </div>
         {/* New Project button */}
-         <button
+        <button
           onClick={() => setModalOpen(!modalOpen)}
           className="bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)] text-md md:text-xl text-white font-bold px-5 py-3 rounded-lg"
         >
           Project
           <FontAwesomeIcon icon={faPlus} className="text-white mx-2" />
-         </button>
+        </button>
       </div>
       <div className=" flex-1 flex justify-between items-center gap-4 mt-4">
         <div className="flex-3">
@@ -34,10 +38,30 @@ const ManagerProjects = () => {
         <div className="flex-1 w-full">
           {/* use select for clearer UX */}
           <select className="border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-500 outline-none">
-            <option className="bg-purple-600 hover:bg-pink-500 text-white text-md font-semibold p-2" value="">Select priority</option>
-            <option className="bg-purple-600 hover:bg-pink-500 text-white text-md font-semibold p-2" value="high">High</option>
-            <option className="bg-purple-600 hover:bg-pink-500 text-white text-md font-semibold p-2" value="medium">Medium</option>
-            <option className="bg-purple-600 hover:bg-pink-500 text-white text-md font-semibold p-2" value="low">Low</option>
+            <option
+              className="bg-purple-600 hover:bg-pink-500 text-white text-md font-semibold p-2"
+              value=""
+            >
+              Select priority
+            </option>
+            <option
+              className="bg-purple-600 hover:bg-pink-500 text-white text-md font-semibold p-2"
+              value="high"
+            >
+              High
+            </option>
+            <option
+              className="bg-purple-600 hover:bg-pink-500 text-white text-md font-semibold p-2"
+              value="medium"
+            >
+              Medium
+            </option>
+            <option
+              className="bg-purple-600 hover:bg-pink-500 text-white text-md font-semibold p-2"
+              value="low"
+            >
+              Low
+            </option>
           </select>
         </div>
       </div>
@@ -68,9 +92,11 @@ const ManagerProjects = () => {
               {/* project Name */}
               <div>
                 <label className="block text-gray-700 font-semibold mb-2">
-                  Project Description
+                  Project Name
                 </label>
                 <input
+                  value={projectDetails.name}
+                  onChange={(e)=>{setProjectDetails({...projectDetails,name:e.target.value})}}
                   type="text"
                   className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-600 outline-none"
                   placeholder="Enter project name..."
@@ -78,8 +104,12 @@ const ManagerProjects = () => {
               </div>
               {/* project  Description*/}
               <div>
-                <label className="block text-gray-700 font-semibold mb-2">Project Name</label>
+                <label className="block text-gray-700 font-semibold mb-2">
+                  Project Description
+                </label>
                 <textarea
+                  value={projectDetails.description}
+                  onChange={(e)=>{setProjectDetails({...projectDetails,description:e.target.value})}}
                   className="w-full h-32 border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-600 outline-none"
                   placeholder="Enter project description..."
                 ></textarea>
@@ -90,7 +120,7 @@ const ManagerProjects = () => {
                   <label className="block text-gray-700 font-semibold mb-2">
                     Project priority
                   </label>
-                  <select className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-600 outline-none">
+                  <select value={projectDetails.priority} onChange={(e)=>{setProjectDetails({...projectDetails,priority:e.target.value})}} className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-600 outline-none">
                     <option value="">Select an Priority</option>
                     <option value="high">High</option>
                     <option value="medium">Medium</option>
@@ -99,9 +129,10 @@ const ManagerProjects = () => {
                 </div>
                 <div>
                   <label className="block text-gray-700 font-semibold mb-2">
-                    Project Description
+                    Project Date
                   </label>
                   <input
+                    value={projectDetails.date} onChange={(e)=>{setProjectDetails({...projectDetails,date:e.target.value})}}
                     type="date"
                     className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-600 outline-none"
                     placeholder="Enter project name..."
@@ -110,8 +141,19 @@ const ManagerProjects = () => {
               </div>
               {/* Bottopm Buttons */}
               <div className="flex justify-end gap-4 mt-4">
-                <button className="px-3 py-2 bg-red-600 text-white rounded-lg font-semibold">Cancel</button>
-                <button className="bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)] text-md md:text-lg text-white font-semibold px-3 py-2 rounded-lg">Create project</button>
+                <button
+                  type="button"
+                  className="px-3 py-2 bg-red-600 text-white rounded-lg font-semibold"
+                >
+                  Cancel
+                </button>
+                <button
+                onClick={handleCreateProject}
+                  type="button"
+                  className="bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)] text-md md:text-lg text-white font-semibold px-3 py-2 rounded-lg"
+                >
+                  Create project
+                </button>
               </div>
             </form>
           </div>

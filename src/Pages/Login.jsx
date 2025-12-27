@@ -24,7 +24,7 @@ const Login = () => {
     password: "",
   });
   const handleLogin = async () => {
-    const { email, password } = userDetails;
+    const {email,password } = userDetails;
     console.log(email, password);
     if (!email || !password) {
       toast.info("Please Fill the form completely");
@@ -40,9 +40,9 @@ const Login = () => {
         );
         sessionStorage.setItem("token", JSON.stringify(result.data.token));
         setTimeout(() => {
-          if (result.data.existingUser.role === "manager") {
+          if (role === "manager") {
             navigate("/manager");
-          } else if (result.data.existingUser.role === "employee") {
+          } else if (role === "employee") {
             navigate("/employee");
           } else {
             navigate("/login");

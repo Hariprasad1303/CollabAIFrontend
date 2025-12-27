@@ -28,44 +28,38 @@ const Signup = () => {
   });
   const navigate = useNavigate();
   //handle signup
-  const handleSignUp = async () => {
-    const { username, email, password, role } = userDetails;
-    if (!username || !email || !password || !role) {
-      toast.success("Please fill the form");
-    } else {
-      // api call
-      const result = await signupAPI({ username, email, password, role });
-      console.log(result);
-      if (result.status == 200) {
-        toast.success("Registration Sucessfull");
-        setUserDetails({
-          email: "",
-          username: "",
-          password: "",
-          role: "",
-        });
-        setTimeout(() => {
-          if (role === "manager") {
-            navigate("/manager");
-          } else if (role === "employee") {
-            navigate("/employee");
-          } else {
-            navigate("/login");
-          }
-        }, 3000);
-      } else if (result.status == 400) {
-        toast.warning(result.response.data);
-        setUserDetails({
-          email: "",
-          username: "",
-          password: "",
-          role: "",
-        });
-      } else {
-        toast.error("Something went wrong");
-      }
+ const handleSignUp=async()=>{
+  const {username,email,password,role}=userDetails;
+  console.log(username,email,password,role);
+  if(!username || !email || !password || !role ){
+    toast.info("Please fill the form completely..");
+  }else{
+    //api call
+    const result=await signupAPI({username,email,password,role});
+    console.log(result);
+    if(result.status==200){
+      toast.success("Registration successfull")
+      setUserDetails({
+        username:"",
+        email:"",
+        password:"",
+        role:""
+      })
+     setTimeout(()=>{
+      if(result.data.role=="employee"){
+        navigate('/employee');
+      }else if(result.data.role=="manager"){
+        navigate('/manager');
+      }else{
+        navigate('/login')
+      }      
+     },2000) 
+    }else if(result.status==400){
+      toast.warning(result.response.data);
     }
-  };
+
+  }
+ }
   console.log(userDetails);
   return (
     <>

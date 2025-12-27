@@ -11,3 +11,5 @@ export const loginAPI=async(reqBody)=>{
     return await commonAPI("POST",`${serverURL}/login`,reqBody);
 }
 
+
+
