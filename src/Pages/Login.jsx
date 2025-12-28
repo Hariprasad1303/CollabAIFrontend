@@ -18,39 +18,39 @@ const Login = () => {
     { id: "users", label: "Log in(User)", icon: faUsers },
     { id: "admin", label: "Log in(Admin)", icon: faUserShield },
   ];
-  const navigate=useNavigate();
   const [userDetails, setUserDetails] = useState({
     email: "",
     password: "",
   });
-  const handleLogin = async () => {
-    const {email,password } = userDetails;
-    console.log(email, password);
-    if (!email || !password) {
-      toast.info("Please Fill the form completely");
-    } else {
-      // api call
-      const result = await loginAPI({ email, password });
-      console.log(result);
-      if (result.status == 200) {
-        toast.success("Login sucessfull...");
-        sessionStorage.setItem(
-          "existingUser",
-          JSON.stringify(result.data.existingUser)
-        );
-        sessionStorage.setItem("token", JSON.stringify(result.data.token));
-        setTimeout(() => {
-          if (role === "manager") {
-            navigate("/manager");
-          } else if (role === "employee") {
-            navigate("/employee");
-          } else {
-            navigate("/login");
-          }
-        }, 3000);
+  //navigation
+  const navigate=useNavigate();
+ //handle login function
+ const handleLogin=async()=>{
+  const {email,password}=userDetails;
+  console.log(email,password);
+  if(!email ||!password){
+    toast.info("Please fill the form completedly")
+  }else{
+    //api call
+    const result=await loginAPI({email,password});
+    console.log(result);
+    if(result.status==200){
+      toast.success("Login successfull");
+      console.log(result.data.existingUser)
+      localStorage.setItem("existingUser",JSON.stringify(result.data.existingUser));
+      console.log(result.data.token)
+      localStorage.setItem("token",result.data.token);
+      console.log(result.data.existingUser.role);
+      if(result.data.existingUser.role=="employee"){
+        navigate('/employee');
+      }else if(result.data.existingUser.role=="manager"){
+        navigate('/manager');
+      }else{
+        navigate('/login');
       }
     }
-  };
+  }
+ }
   //state for tab creation
   const [activeTab, setActivetab] = useState("users");
   return (

@@ -1,7 +1,9 @@
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
-import { Form } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Form, Link } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import { getProjectAPI, projectAPI } from "../../services/allAPI";
 
 const ManagerProjects = () => {
   const [projectDetails, setProjectDetails] = useState({
@@ -10,6 +12,60 @@ const ManagerProjects = () => {
     priority: "",
     date: "",
   });
+  const [projects, setProjects] = useState([]);
+  const handleCreateProject = async (req, res) => {
+    console.log("button clicked");
+    const { name, description, priority, date } = projectDetails;
+    console.log(name, description, priority, date);
+    if (!name || !description || !priority || !date) {
+      toast.info("Please fill all the details");
+    } else {
+      // api call
+      const result = await projectAPI({ name, description, priority, date });
+      console.log(result);
+      if (result.status == 200) {
+        toast.success("Project created succesfully");
+        setProjectDetails({
+          name: "",
+          description: "",
+          priority: "",
+          date: "",
+        });
+        setModalOpen(false);
+        getProjects();
+      } else if (result.status == 400) {
+        toast.warning(result.response.data);
+        setProjectDetails({
+          name: "",
+          description: "",
+          priority: "",
+          date: "",
+        });
+      } else {
+        toast.warning("something went wrong");
+        setProjectDetails({
+          name: "",
+          description: "",
+          priority: "",
+          date: "",
+        });
+      }
+    }
+  };
+  useEffect(() => {
+    getProjects();
+  }, []);
+  const getProjects = async () => {
+    try {
+      const result = await getProjectAPI();
+      console.log(result);
+      if (result.status == 200) {
+        setProjects(result.data);
+      }
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  };
   const [modalOpen, setModalOpen] = useState(false);
   return (
     <div className="flex flex-col gap-3 p-4 w-full">
@@ -65,6 +121,68 @@ const ManagerProjects = () => {
           </select>
         </div>
       </div>
+      {/* project cards -main container*/}
+      <div className="flex flex-col md:flex-row w-full ">
+        {/*sub containetr  */}
+        <div className="flex-1 flex flex-col bg-white rounded-xl p-6">
+          {/* project Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {projects.map((project) => (
+              <div
+                key={project._id}
+                className="relative flex flex-col gap-3 bg-white shadow-md hover:shadow-2xl rounded-xl transition-all duration-300 border border-gray-200 p-6"
+              >
+                {/*project description  */}
+                <span
+                  className={`absolute top-4 right-4 px-3 py-1 text-xs font-semibold rounded-full ${
+                    project.priority == "High"
+                      ? "bg-red-100 text-red-600"
+                      : project.priority == "Medium"
+                      ? "bg-yellow-100 text-yellow-600"
+                      : "bg-green-100 text-green-600"
+                  }`}
+                >
+                  {project.priority}
+                </span>
+                {/* project name */}
+                <h2 className="text-lg font-bold text-gray-800 group-hover:text-purple-600 transition">
+                  {project.name}
+                </h2>
+                {/* project description */}
+                <p className="text-gray-500 text-sm mt-2 line-clamp-3">
+                  {project.description}
+                </p>
+                {/* project progression */}
+                <div className="flex flex-col gap-1.5">
+                  <h5 className="text-[#0F172A] text-md md:text-lg font-bold">
+                    {project.name}
+                  </h5>
+                  <div className="flex justify-between items-center">
+                    <span className="text-[#0F172A] text-3xs md:text-sm font-semibold">
+                      24 tasks
+                    </span>
+                    <p className="flex items-center bg-purple-600 text-white text-3xs md:text-sm  p-1 md:p-2 rounded-lg">
+                      90%
+                    </p>
+                  </div>
+                  <div className="bg-pink-500 relative h-2.5 md:h-3 rounded-lg">
+                    <div className="absolute bg-purple-600 w-[90%] h-2.5 md:h-3 rounded-lg z-40"></div>
+                  </div>
+                </div>
+                {/* bottom row */}
+                <div className="flex justify-between items-center text-sm text-gray-500 mt-4">
+                  <span>📅{new Date(project.date).toLocaleDateString()}</span>
+                 <Link to={`${project._id}`}>
+                    <button className="text-purple-600 font-semibold hover:underline">
+                      View More <FontAwesomeIcon icon={faArrowRight} />
+                    </button>
+                 </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
       {/* Modal  start*/}
       {modalOpen && (
         <div
@@ -88,7 +206,7 @@ const ManagerProjects = () => {
               </button>
             </div>
             {/* body Portion */}
-            <form onSubmit={(e) => e.preventDefault()} className="space-y-6">
+            <form className="space-y-6">
               {/* project Name */}
               <div>
                 <label className="block text-gray-700 font-semibold mb-2">
@@ -96,7 +214,12 @@ const ManagerProjects = () => {
                 </label>
                 <input
                   value={projectDetails.name}
-                  onChange={(e)=>{setProjectDetails({...projectDetails,name:e.target.value})}}
+                  onChange={(e) => {
+                    setProjectDetails({
+                      ...projectDetails,
+                      name: e.target.value,
+                    });
+                  }}
                   type="text"
                   className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-600 outline-none"
                   placeholder="Enter project name..."
@@ -109,7 +232,12 @@ const ManagerProjects = () => {
                 </label>
                 <textarea
                   value={projectDetails.description}
-                  onChange={(e)=>{setProjectDetails({...projectDetails,description:e.target.value})}}
+                  onChange={(e) => {
+                    setProjectDetails({
+                      ...projectDetails,
+                      description: e.target.value,
+                    });
+                  }}
                   className="w-full h-32 border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-600 outline-none"
                   placeholder="Enter project description..."
                 ></textarea>
@@ -120,11 +248,20 @@ const ManagerProjects = () => {
                   <label className="block text-gray-700 font-semibold mb-2">
                     Project priority
                   </label>
-                  <select value={projectDetails.priority} onChange={(e)=>{setProjectDetails({...projectDetails,priority:e.target.value})}} className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-600 outline-none">
+                  <select
+                    value={projectDetails.priority}
+                    onChange={(e) => {
+                      setProjectDetails({
+                        ...projectDetails,
+                        priority: e.target.value,
+                      });
+                    }}
+                    className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-600 outline-none"
+                  >
                     <option value="">Select an Priority</option>
-                    <option value="high">High</option>
-                    <option value="medium">Medium</option>
-                    <option value="low">Low</option>
+                    <option value="High">High</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Low">Low</option>
                   </select>
                 </div>
                 <div>
@@ -132,7 +269,13 @@ const ManagerProjects = () => {
                     Project Date
                   </label>
                   <input
-                    value={projectDetails.date} onChange={(e)=>{setProjectDetails({...projectDetails,date:e.target.value})}}
+                    value={projectDetails.date}
+                    onChange={(e) => {
+                      setProjectDetails({
+                        ...projectDetails,
+                        date: e.target.value,
+                      });
+                    }}
                     type="date"
                     className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-600 outline-none"
                     placeholder="Enter project name..."
@@ -148,7 +291,7 @@ const ManagerProjects = () => {
                   Cancel
                 </button>
                 <button
-                onClick={handleCreateProject}
+                  onClick={handleCreateProject}
                   type="button"
                   className="bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)] text-md md:text-lg text-white font-semibold px-3 py-2 rounded-lg"
                 >
@@ -160,6 +303,7 @@ const ManagerProjects = () => {
         </div>
       )}
       {/* Modal End */}
+      <ToastContainer position="top-center" theme="colored" autoClose={2000} />
     </div>
   );
 };

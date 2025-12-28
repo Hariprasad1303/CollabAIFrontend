@@ -31,6 +31,7 @@ import AdminUserManagement from './admin/pages/AdminUserManagement'
 import AdminAnalytics from "./admin/pages/AdminAnalytics";
 import AdminProjects from "./admin/pages/AdminProjects";
 import AdminSettings from "./admin/pages/AdminSettings";
+import ProjectDetails from "./projectmanager/pages/ProjectDetails";
 
 
 function App() {
@@ -46,6 +47,7 @@ function App() {
           <Route index element={<ManagerDashboard />} />
           <Route path="dashboard" element={<ManagerDashboard />} />
           <Route path="projects" element={<ManagerProjects />} />
+          <Route path="projects/:id" element={<ProjectDetails />} />
           <Route path="team" element={<ManagerTeam />} />
           <Route path="analytics" element={<ManagerAnalytics />} />
           <Route path="chat" element={<ManagerChat />} />
@@ -56,6 +58,7 @@ function App() {
         <Route path="/employee" element={<EmployeeLayout />}>
           <Route index element={<EmployeeDashboard />} />
           <Route path="dashboard" element={<EmployeeDashboard />} />
+          <Route path="projects" element={<EmployeeProjects />} />
           <Route path="projects" element={<EmployeeProjects />} />
           <Route path="team" element={<EmployeeTeam />} />
           <Route path="analytics" element={<EmployeeAnalytics />} />

@@ -21,7 +21,7 @@ const Header = () => {
         </div>
         {/* navlinks */}
         <nav className='hidden md:flex space-x-10'>
-          <ul className='flex'>text-[#64748B]
+          <ul className='flex'>
             <li className='mx-10'><a href="#" onClick={(e)=>{e.preventDefault();scrollToSection("home")}}  className=' text-lg font-medium hover:text-[#0F172A] transition-colors duration-300'>Home</a></li>
             <li className='mx-10'><a href="#" onClick={(e)=>{e.preventDefault();scrollToSection("feature")}} className='text-[#64748B] text-lg font-medium hover:text-[#0F172A] transition-colors duration-300'>Features</a></li>
             <li className='mx-10'><a href="#" onClick={(e)=>{e.preventDefault();scrollToSection("testimonials")}} className='text-[#64748B] text-lg font-medium hover:text-[#0F172A] transition-colors duration-300'>Testimonials</a></li>
