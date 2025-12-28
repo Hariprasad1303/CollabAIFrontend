@@ -28,3 +28,11 @@ export const getProjectAPI = async () => {
     Authorization: `Bearer ${token}`,
   });
 };
+
+
+//update profile
+export const updateProfileAPI=async(reqBody)=>{
+    const token=localStorage.getItem("token");
+    console.log(token);
+    return await commonAPI("PUT",`${serverURL}/manager/profile`,reqBody,{Authorization:`Bearer ${token}`})
+}
