@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { faGoogle, faGithub } from "@fortawesome/free-brands-svg-icons";
 import { updateProfileAPI } from "../../services/allAPI";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 
 const ManagerSettings = () => {
   const [profile, setProfile] = useState(true);
@@ -357,6 +357,7 @@ const ManagerSettings = () => {
           </div>
         </div>
       )}
+      <ToastContainer position="top-center" theme="colored" autoClose={2000} />
     </div>
   );
 };
