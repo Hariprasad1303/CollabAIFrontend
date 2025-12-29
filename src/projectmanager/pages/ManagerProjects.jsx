@@ -1,4 +1,8 @@
-import { faArrowRight, faEllipsisVertical, faPlus } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowRight,
+  faEllipsisVertical,
+  faPlus,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { Form, Link } from "react-router-dom";
@@ -6,13 +10,17 @@ import { toast, ToastContainer } from "react-toastify";
 import { getProjectAPI, projectAPI } from "../../services/allAPI";
 
 const ManagerProjects = () => {
+  //state for getting project details
   const [projectDetails, setProjectDetails] = useState({
     name: "",
     description: "",
     priority: "",
     date: "",
   });
+  //state for getting projects form db
   const [projects, setProjects] = useState([]);
+
+  //function for creating projects
   const handleCreateProject = async (req, res) => {
     console.log("button clicked");
     const { name, description, priority, date } = projectDetails;
@@ -52,9 +60,17 @@ const ManagerProjects = () => {
       }
     }
   };
+  //page loading effect
   useEffect(() => {
     getProjects();
   }, []);
+
+  //state for project filtering
+  const [projectFilter, setProjectFilter] = useState("All priorities");
+  const filteredProjects = projects.filter(
+    (project) =>
+      projectFilter === "All priorities" || project.priority == projectFilter
+  );
   const getProjects = async () => {
     try {
       const result = await getProjectAPI();
@@ -69,6 +85,7 @@ const ManagerProjects = () => {
   const [modalOpen, setModalOpen] = useState(false);
   return (
     <div className="flex flex-col gap-3 p-4 w-full">
+      {/* first row */}
       <div className=" flex-3 flex flex-col md:flex-row items-center justify-start md:justify-between gap-4">
         <div className="flex flex-col  gap-2">
           <h2 className="text-3xl font-extrabold text-[#0F172A]">Projects</h2>
@@ -83,7 +100,9 @@ const ManagerProjects = () => {
           <FontAwesomeIcon icon={faPlus} className="text-white mx-2" />
         </button>
       </div>
+      {/* search bar and filtering dropdown */}
       <div className=" flex-1 flex justify-between items-center gap-4 mt-4">
+      {/* search bar */}
         <div className="flex-3">
           <input
             type="text"
@@ -91,30 +110,35 @@ const ManagerProjects = () => {
             className="border-2 w-full p-3  border-gray-300"
           />
         </div>
+        {/* drop down */}
         <div className="flex-1 w-full">
           {/* use select for clearer UX */}
-          <select className="border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-500 outline-none">
+          <select
+            value={projectFilter}
+            onChange={(e)=>setProjectFilter(e.target.value)}
+            className="border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-500 outline-none"
+          >
             <option
               className="bg-purple-600 hover:bg-pink-500 text-white text-md font-semibold p-2"
               value=""
             >
-              Select priority
+              All priorities
             </option>
             <option
               className="bg-purple-600 hover:bg-pink-500 text-white text-md font-semibold p-2"
-              value="high"
+              value="High"
             >
               High
             </option>
             <option
               className="bg-purple-600 hover:bg-pink-500 text-white text-md font-semibold p-2"
-              value="medium"
+              value="Medium"
             >
               Medium
             </option>
             <option
               className="bg-purple-600 hover:bg-pink-500 text-white text-md font-semibold p-2"
-              value="low"
+              value="Low"
             >
               Low
             </option>
@@ -127,24 +151,29 @@ const ManagerProjects = () => {
         <div className="flex-1 flex flex-col bg-white rounded-xl p-6">
           {/* project Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {projects.map((project) => (
+            {filteredProjects.map((project) => (
               <div
                 key={project._id}
                 className="relative flex flex-col gap-3 bg-white shadow-md hover:shadow-2xl rounded-xl transition-all duration-300 border border-gray-200 p-6"
               >
                 {/*project description  */}
-                  <span
-                    className={`absolute top-4 right-12 px-3 py-1 text-xs font-semibold rounded-full ${
-                      project.priority == "High"
-                        ? "bg-red-100 text-red-600"
-                        : project.priority == "Medium"
-                        ? "bg-yellow-100 text-yellow-600"
-                        : "bg-green-100 text-green-600"
-                    }`}
-                  >
-                    {project.priority}
-                  </span>
-                  <button><FontAwesomeIcon icon={faEllipsisVertical} className="absolute ms-4 top-4 right-2"/></button>
+                <span
+                  className={`absolute top-4 right-12 px-3 py-1 text-xs font-semibold rounded-full ${
+                    project.priority == "High"
+                      ? "bg-red-100 text-red-600"
+                      : project.priority == "Medium"
+                      ? "bg-yellow-100 text-yellow-600"
+                      : "bg-green-100 text-green-600"
+                  }`}
+                >
+                  {project.priority}
+                </span>
+                <button>
+                  <FontAwesomeIcon
+                    icon={faEllipsisVertical}
+                    className="absolute ms-4 top-4 right-2"
+                  />
+                </button>
                 {/* projet name */}
                 <h2 className="text-lg font-bold text-gray-800 group-hover:text-purple-600 transition">
                   {project.name}
@@ -173,11 +202,11 @@ const ManagerProjects = () => {
                 {/* bottom row */}
                 <div className="flex justify-between items-center text-sm text-gray-500 mt-4">
                   <span>📅{new Date(project.date).toLocaleDateString()}</span>
-                 <Link to={`${project._id}`}>
+                  <Link to={`${project._id}`}>
                     <button className="text-purple-600 font-semibold hover:underline">
                       View More <FontAwesomeIcon icon={faArrowRight} />
                     </button>
-                 </Link>
+                  </Link>
                 </div>
               </div>
             ))}
