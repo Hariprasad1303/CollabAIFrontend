@@ -67,10 +67,20 @@ const ManagerProjects = () => {
 
   //state for project filtering
   const [projectFilter, setProjectFilter] = useState("All priorities");
-  const filteredProjects = projects.filter(
-    (project) =>
-      projectFilter === "All priorities" || project.priority == projectFilter
-  );
+
+  //state for search feature
+  const [searchTerm, setSearchTerm] = useState("");
+
+  //search +filter
+  const filteredProjects = projects.filter((project) => {
+    const matchPriority =
+      projectFilter === "All priorities" || project.priority == projectFilter;
+    const matchSearch =
+      project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      project.description.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchPriority && matchSearch;
+  });
+
   const getProjects = async () => {
     try {
       const result = await getProjectAPI();
@@ -102,9 +112,13 @@ const ManagerProjects = () => {
       </div>
       {/* search bar and filtering dropdown */}
       <div className=" flex-1 flex justify-between items-center gap-4 mt-4">
-      {/* search bar */}
+        {/* search bar */}
         <div className="flex-3">
           <input
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+            }}
             type="text"
             placeholder="Search projects"
             className="border-2 w-full p-3  border-gray-300"
@@ -115,7 +129,7 @@ const ManagerProjects = () => {
           {/* use select for clearer UX */}
           <select
             value={projectFilter}
-            onChange={(e)=>setProjectFilter(e.target.value)}
+            onChange={(e) => setProjectFilter(e.target.value)}
             className="border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-500 outline-none"
           >
             <option
