@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   faGauge,
@@ -13,6 +13,7 @@ import {
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { getUserDetailsAPI } from "../../services/allAPI";
 
 const navItems = [
   { name: "Dashboard", href: "/manager/dashboard", icon: faGauge },
@@ -25,7 +26,25 @@ const navItems = [
 
 const ManagerSideBar = ({ collapsed, setCollapsed, mobileOpen, setMobileOpen }) => {
   const location = useLocation();
-
+   const [profileInfo, setProfileInfo] = useState({
+      email: "",
+      username: "",
+      role: "",
+    });
+   //function for fetching user details 
+  const fetchUserDetails = async () => {
+      try {
+        const result = await getUserDetailsAPI();
+        console.log(result);
+        setProfileInfo({username:result.data.username,role:result.data.role});
+      } catch (err) {
+        console.log(err);
+      }
+    };  
+  //page loading effect
+   useEffect(() => {
+      fetchUserDetails();
+    }, []);  
   return (
     <>
       {/* Mobile Backdrop */}
@@ -130,23 +149,25 @@ const ManagerSideBar = ({ collapsed, setCollapsed, mobileOpen, setMobileOpen }) 
 
             {(!collapsed || mobileOpen) && (
               <div className="flex flex-col">
-                <p className="text-sm font-semibold">Alex Johnson</p>
-                <p className="text-xs text-gray-500">Project Manager</p>
+                <p className="text-md text-[#0F172A] font-bold">{profileInfo.username}</p>
+                <p className="text-sm text-gray-600 font-semibold">{profileInfo.role}</p>
               </div>
             )}
           </div>
 
-          <button
-            className={`
-              mt-3 flex items-center gap-3 text-red-500 px-2 py-2 rounded-lg hover:bg-red-50 w-full transition-all
-              ${collapsed && !mobileOpen ? "justify-center" : ""}
-            `}
-          >
-            <FontAwesomeIcon icon={faRightFromBracket} />
-            {(!collapsed || mobileOpen) && (
-              <span className="text-sm font-medium">Logout</span>
-            )}
-          </button>
+         <Link to={'/login'}>
+            <button
+              className={`
+                mt-3 flex items-center gap-3 text-red-500 px-2 py-2 rounded-lg hover:bg-red-50 w-full transition-all
+                ${collapsed && !mobileOpen ? "justify-center" : ""}
+              `}
+            >
+              <FontAwesomeIcon icon={faRightFromBracket} />
+              {(!collapsed || mobileOpen) && (
+                <span className="text-sm font-medium">Logout</span>
+              )}
+            </button>
+         </Link>
         </div>
 
         {/* Collapse Button (Desktop Only) */}

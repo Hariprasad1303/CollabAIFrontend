@@ -13,8 +13,48 @@ import {
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { getProjectCountAPI, getUserDetailsAPI } from "../../services/allAPI";
+
 const ManagerDashboard = () => {
+  //state to count number of projects manager handling
+  const [projectCount, setProjectCount] = useState(0);
+  const [profileInfo, setProfileInfo] = useState({
+    email: "",
+    username: "",
+    role: "",
+  });
+  //function for getting getting user details
+  const fetchUserDetails = async () => {
+    try {
+      const result = await getUserDetailsAPI();
+      console.log(result);
+      setProfileInfo({username:result.data.username,role:result.data.role});
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  //function for fetching the count of projects
+  const fetchProjectCount = async () => {
+    try {
+      const result = await getProjectCountAPI();
+      console.log(result);
+      setProjectCount(result.data.count);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // page loading effect
+  useEffect(() => {
+    fetchProjectCount();
+  }, []);
+
+  //page loading effect
+  useEffect(() => {
+    fetchUserDetails();
+  }, []);
   return (
     <div className="flex flex-col gap-6">
       {/*Dashboard heading  */}
@@ -109,7 +149,7 @@ const ManagerDashboard = () => {
               Active projects
             </h4>
             <span className="font-extrabold text-4xl md:text-5xl text-[#0F172A]">
-              0
+              {projectCount}
             </span>
             <p className="text-[#0F172A] font-semibold text-sm md:text-md">
               <FontAwesomeIcon icon={faArrowDown} className="text-red-600" />
@@ -529,15 +569,22 @@ const ManagerDashboard = () => {
             </p>
           </div>
         </div>
-        
         <div className="flex flex-col gap-4">
           <div className="flex justify-evenly items-center">
-            <button className="border border-gray-300 text-[#0F172A] px-3 md:px-4 py-2 md:py-3 rounded-lg  text-xs md:text-sm me-3">Generate Project Summary</button>
-            <button className="border border-gray-300 text-[#0F172A] px-3 md:px-4 py-2 md:py-3 rounded-lg  text-xs md:text-sm me-3">Suggest Tasks</button>
+            <button className="border border-gray-300 text-[#0F172A] px-3 md:px-4 py-2 md:py-3 rounded-lg  text-xs md:text-sm me-3">
+              Generate Project Summary
+            </button>
+            <button className="border border-gray-300 text-[#0F172A] px-3 md:px-4 py-2 md:py-3 rounded-lg  text-xs md:text-sm me-3">
+              Suggest Tasks
+            </button>
           </div>
           <div className="flex justify-evenly items-center">
-            <button className="border border-gray-300 text-[#0F172A] px-3 md:px-4 py-2 md:py-3 rounded-lg  text-xs md:text-sm me-3">Analyse Team Perfomance</button>
-            <button className="border border-gray-300 text-[#0F172A] px-3 md:px-4 py-2 md:py-3 rounded-lg  text-xs md:text-sm me-3">Weekly Report</button>
+            <button className="border border-gray-300 text-[#0F172A] px-3 md:px-4 py-2 md:py-3 rounded-lg  text-xs md:text-sm me-3">
+              Analyse Team Perfomance
+            </button>
+            <button className="border border-gray-300 text-[#0F172A] px-3 md:px-4 py-2 md:py-3 rounded-lg  text-xs md:text-sm me-3">
+              Weekly Report
+            </button>
           </div>
         </div>
       </div>

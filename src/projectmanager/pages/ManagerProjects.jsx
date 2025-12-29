@@ -1,4 +1,4 @@
-import { faArrowRight, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight, faEllipsisVertical, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { Form, Link } from "react-router-dom";
@@ -133,18 +133,19 @@ const ManagerProjects = () => {
                 className="relative flex flex-col gap-3 bg-white shadow-md hover:shadow-2xl rounded-xl transition-all duration-300 border border-gray-200 p-6"
               >
                 {/*project description  */}
-                <span
-                  className={`absolute top-4 right-4 px-3 py-1 text-xs font-semibold rounded-full ${
-                    project.priority == "High"
-                      ? "bg-red-100 text-red-600"
-                      : project.priority == "Medium"
-                      ? "bg-yellow-100 text-yellow-600"
-                      : "bg-green-100 text-green-600"
-                  }`}
-                >
-                  {project.priority}
-                </span>
-                {/* project name */}
+                  <span
+                    className={`absolute top-4 right-12 px-3 py-1 text-xs font-semibold rounded-full ${
+                      project.priority == "High"
+                        ? "bg-red-100 text-red-600"
+                        : project.priority == "Medium"
+                        ? "bg-yellow-100 text-yellow-600"
+                        : "bg-green-100 text-green-600"
+                    }`}
+                  >
+                    {project.priority}
+                  </span>
+                  <button><FontAwesomeIcon icon={faEllipsisVertical} className="absolute ms-4 top-4 right-2"/></button>
+                {/* projet name */}
                 <h2 className="text-lg font-bold text-gray-800 group-hover:text-purple-600 transition">
                   {project.name}
                 </h2>
