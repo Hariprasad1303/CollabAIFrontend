@@ -47,6 +47,20 @@ export const getProjectCountAPI = async () => {
   });
 };
 
+//project invite api
+export const projectInviteAPI=async(reqBody)=>{
+  const token=localStorage.getItem("token");
+  console.log(token);
+  return await  commonAPI("POST",`${serverURL}/manager/invite`,reqBody,{Authorization:`Bearer ${token}`});
+}
+
+//get notification API
+export const getNotificationAPI=async()=>{
+  const token=localStorage.getItem("token");
+  console.log(token);
+  return await commonAPI("GET",`${serverURL}/notifications`,null,{Authorization:`Bearer ${token}`});
+}
+
 //update profile
 export const updateProfileAPI = async (reqBody) => {
   const token = localStorage.getItem("token");

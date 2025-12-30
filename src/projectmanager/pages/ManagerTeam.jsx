@@ -12,13 +12,55 @@ import {
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { getProjectAPI, projectInviteAPI } from "../../services/allAPI";
+import { toast, ToastContainer } from "react-toastify";
 
 const ManagerTeam = () => {
   const tabs = [
-    { id: "teammembers", label: "Team members",icon:faUsers },
-    { id: "invites", label: "pending Invites",icon:faEnvelope },
+    { id: "teammembers", label: "Team members", icon: faUsers },
+    { id: "invites", label: "pending Invites", icon: faEnvelope },
   ];
+  //state for getting the project details
+  const [projects, setProjects] = useState([]);
+
+  //functions for getting the project details
+  const getProjects = async () => {
+    try {
+      const result = await getProjectAPI();
+      console.log(result);
+      if (result.status == 200) {
+        setProjects(result.data);
+      }
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  };
+
+  //page reloading  
+  useEffect(()=>{
+    getProjects();
+  },[])
+
+  //state for   holding invitation details
+  const [invitationDetails, setInvitationDetails] = useState({
+    username: "",
+    email: "",
+    projectName: "",
+  });
+  //function for sending invitation
+  const handleSendInvitation=async() => {
+    const { username, email, projectName } = invitationDetails;
+    console.log(username, email, projectName);
+    if (!username || !email || !projectName) {
+      toast.info("please fill all the details");
+    } else {
+      //api call
+      const result = await projectInviteAPI({ username, email, projectName });
+      console.log(result);
+    }
+  };
   const [teamModalOpen, setTeamModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("Team Members");
   return (
@@ -35,13 +77,15 @@ const ManagerTeam = () => {
         </div>
         {/* New Project button */}
         <div className="flex gap-4">
-          <button className="text-md md:text-xl text-[#0F172A] font-bold px-5 py-3 rounded-lg border-gray-400 border">
-            <FontAwesomeIcon
-              icon={faFolderOpen}
-              className="text-[#0F172A] mx-2"
-            />
-            View Projects
-          </button>
+          <Link to={"/manager/projects"}>
+            <button className="text-md md:text-xl text-[#0F172A] font-bold px-5 py-3 rounded-lg border-gray-400 border">
+              <FontAwesomeIcon
+                icon={faFolderOpen}
+                className="text-[#0F172A] mx-2"
+              />
+              View Projects
+            </button>
+          </Link>
           <button
             onClick={() => setTeamModalOpen(!teamModalOpen)}
             className="bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)] text-md md:text-xl text-white font-bold px-5 py-3 rounded-lg hover:bg-cyan-400 hover:text-white transition-all duration-300"
@@ -139,25 +183,28 @@ const ManagerTeam = () => {
       </div>
       {/* tab */}
       <div className="w-full">
-       {/*Tab Headers */}
-       <div className="inline-flex rounded-lg bg-gray-100 p-2 gap-2">
-       {
-        tabs.map((tab)=>(
-          <button key={tab.id} className={`px-4 py-2 text-sm font-medium rounded-md transition ${activeTab==tab.id?"bg-white text-[#0F172A] font-extrabold shadow-sm":"text-gray-500 hover:text-gray-700"}`} onClick={()=>setActiveTab(tab.id)}>
-          <FontAwesomeIcon icon={tab.icon} className="me-2 text-md"/>{tab.label}
-          </button>
-        ))
-       } 
-       </div>
-       {/* Tab Content */}
-       <div className="mt-6">
-       {activeTab=="teammembers" &&
-       <div>Team members</div>
-       }
-       {activeTab=="invites" &&
-       <div>Pending Invites</div>
-       } 
-       </div>
+        {/*Tab Headers */}
+        <div className="inline-flex rounded-lg bg-gray-100 p-2 gap-2">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              className={`px-4 py-2 text-sm font-medium rounded-md transition ${
+                activeTab == tab.id
+                  ? "bg-white text-[#0F172A] font-extrabold shadow-sm"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
+              onClick={() => setActiveTab(tab.id)}
+            >
+              <FontAwesomeIcon icon={tab.icon} className="me-2 text-md" />
+              {tab.label}
+            </button>
+          ))}
+        </div>
+        {/* Tab Content */}
+        <div className="mt-6">
+          {activeTab == "teammembers" && <div>Team members</div>}
+          {activeTab == "invites" && <div>Pending Invites</div>}
+        </div>
       </div>
       {/* Team Invitation Modal  start*/}
       {teamModalOpen && (
@@ -193,13 +240,20 @@ const ManagerTeam = () => {
               </button>
             </div>
             {/* body Portion */}
-            <form onSubmit={(e) => e.preventDefault()} className="space-y-6">
+            <form className="space-y-6">
               {/*Invitaion username */}
               <div>
                 <label className="block text-gray-700 font-semibold mb-2">
-                  Full name
+                  Username
                 </label>
                 <input
+                  value={invitationDetails.username}
+                  onChange={(e) => {
+                    setInvitationDetails({
+                      ...invitationDetails,
+                      username: e.target.value,
+                    });
+                  }}
                   type="text"
                   className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-600 outline-none"
                   placeholder="John Doe"
@@ -211,6 +265,13 @@ const ManagerTeam = () => {
                   Email Address
                 </label>
                 <input
+                  value={invitationDetails.email}
+                  onChange={(e) => {
+                    setInvitationDetails({
+                      ...invitationDetails,
+                      email: e.target.value,
+                    });
+                  }}
                   type="text"
                   className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-600 outline-none"
                   placeholder="college@example.com"
@@ -222,11 +283,21 @@ const ManagerTeam = () => {
                   <label className="block text-gray-700 font-semibold mb-2">
                     Asssigned Project
                   </label>
-                  <select className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-600 outline-none">
-                    <option value="">Select an Priority</option>
-                    <option value="high">CollabAI</option>
-                    <option value="medium">Acessible Scan</option>
-                    <option value="low">Sign2text</option>
+                  <select
+                    value={invitationDetails.projectName}
+                    onChange={(e) => {
+                      setInvitationDetails({
+                        ...invitationDetails,
+                        projectName: e.target.value,
+                      });
+                    }}
+                    className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-600 outline-none"
+                  >
+                  {
+                    projects.map((project)=>(
+                      <option key={project._id} value={project.name}>{project.name}</option>
+                    ))
+                  }
                   </select>
                 </div>
               </div>
@@ -252,7 +323,11 @@ const ManagerTeam = () => {
                 <button className="px-3 py-2 bg-red-600 text-white rounded-lg font-semibold">
                   Cancel
                 </button>
-                <button className="bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)] text-md md:text-lg text-white font-semibold px-3 py-2 rounded-lg">
+                <button
+                  onClick={handleSendInvitation}
+                  type="button"
+                  className="bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)] text-md md:text-lg text-white font-semibold px-3 py-2 rounded-lg"
+                >
                   <FontAwesomeIcon
                     icon={faMessage}
                     className="text-xl text-white me-2"
@@ -265,6 +340,7 @@ const ManagerTeam = () => {
         </div>
       )}
       {/*Team Invitation Modal End */}
+      <ToastContainer position="top-center" theme="colored" autoClose={2000} />
     </div>
   );
 };
