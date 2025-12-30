@@ -13,9 +13,9 @@ export const loginAPI = async (reqBody) => {
 
 //get user details api
 export const getUserDetailsAPI = async () => {
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   console.log(token);
-  return await commonAPI("GET", `${serverURL}/manager/userdetails`, null, {
+  return await commonAPI("GET", `${serverURL}/userdetails`, null, {
     Authorization: `Bearer ${token}`,
   });
 };
@@ -31,7 +31,7 @@ export const projectAPI = async (reqBody) => {
 
 // get project api
 export const getProjectAPI = async () => {
-  const token = localStorage.getItem("token");
+  const token =sessionStorage.getItem("token");
   console.log(token);
   return await commonAPI("GET", `${serverURL}/manager/projects`, null, {
     Authorization: `Bearer ${token}`,
@@ -40,7 +40,7 @@ export const getProjectAPI = async () => {
 
 //get project api
 export const getProjectCountAPI = async () => {
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   console.log(token);
   return await commonAPI("GET", `${serverURL}/manager/projects/count`, null, {
     Authorization: `Bearer ${token}`,
@@ -49,21 +49,21 @@ export const getProjectCountAPI = async () => {
 
 //project invite api
 export const projectInviteAPI=async(reqBody)=>{
-  const token=localStorage.getItem("token");
+  const token=sessionStorage.getItem("token");
   console.log(token);
   return await  commonAPI("POST",`${serverURL}/manager/invite`,reqBody,{Authorization:`Bearer ${token}`});
 }
 
 //get notification API
 export const getNotificationAPI=async()=>{
-  const token=localStorage.getItem("token");
+  const token=sessionStorage.getItem("token");
   console.log(token);
   return await commonAPI("GET",`${serverURL}/notifications`,null,{Authorization:`Bearer ${token}`});
 }
 
 //update profile
 export const updateProfileAPI = async (reqBody) => {
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   console.log(token);
   return await commonAPI("PUT", `${serverURL}/manager/profile`, reqBody, {
     Authorization: `Bearer ${token}`,

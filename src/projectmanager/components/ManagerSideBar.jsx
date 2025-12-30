@@ -24,27 +24,35 @@ const navItems = [
   { name: "Settings", href: "/manager/settings", icon: faCog },
 ];
 
-const ManagerSideBar = ({ collapsed, setCollapsed, mobileOpen, setMobileOpen }) => {
+const ManagerSideBar = ({
+  collapsed,
+  setCollapsed,
+  mobileOpen,
+  setMobileOpen,
+}) => {
   const location = useLocation();
-   const [profileInfo, setProfileInfo] = useState({
-      email: "",
-      username: "",
-      role: "",
-    });
-   //function for fetching user details 
+  const [profileInfo, setProfileInfo] = useState({
+    email: "",
+    username: "",
+    role: "",
+  });
+  //function for fetching user details
   const fetchUserDetails = async () => {
-      try {
-        const result = await getUserDetailsAPI();
-        console.log(result);
-        setProfileInfo({username:result.data.username,role:result.data.role});
-      } catch (err) {
-        console.log(err);
-      }
-    };  
+    try {
+      const result = await getUserDetailsAPI();
+      console.log(result);
+      setProfileInfo({
+        username: result.data.username,
+        role: result.data.role,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
   //page loading effect
-   useEffect(() => {
-      fetchUserDetails();
-    }, []);  
+  useEffect(() => {
+    fetchUserDetails();
+  }, []);
   return (
     <>
       {/* Mobile Backdrop */}
@@ -80,12 +88,20 @@ const ManagerSideBar = ({ collapsed, setCollapsed, mobileOpen, setMobileOpen }) 
 
         {/* Logo */}
         <div className="h-16 flex items-center justify-between px-4 border-b border-gray-300">
-          {(!collapsed || mobileOpen) ? (
-            <h1 className="text-2xl font-extrabold bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)]
- bg-clip-text text-transparent">CollabAI</h1>
+          {!collapsed || mobileOpen ? (
+            <h1
+              className="text-2xl font-extrabold bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)]
+ bg-clip-text text-transparent"
+            >
+              CollabAI
+            </h1>
           ) : (
-            <span className="text-3xl font-extrabold  bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)]
- bg-clip-text text-transparent">C</span>
+            <span
+              className="text-3xl font-extrabold  bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)]
+ bg-clip-text text-transparent"
+            >
+              C
+            </span>
           )}
         </div>
 
@@ -111,7 +127,9 @@ const ManagerSideBar = ({ collapsed, setCollapsed, mobileOpen, setMobileOpen }) 
               >
                 <FontAwesomeIcon
                   icon={item.icon}
-                  className={`text-lg ${active ? "text-white" : "text-gray-500"}`}
+                  className={`text-lg ${
+                    active ? "text-white" : "text-gray-500"
+                  }`}
                 />
 
                 {(!collapsed || mobileOpen) && (
@@ -125,8 +143,10 @@ const ManagerSideBar = ({ collapsed, setCollapsed, mobileOpen, setMobileOpen }) 
         {/* AI Assistant */}
         {(!collapsed || mobileOpen) && (
           <div className="px-4 mt-6">
-            <button className="w-full flex items-center gap-3 px-3 py-2 rounded-lg bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)]
- text-white">
+            <button
+              className="w-full flex items-center gap-3 px-3 py-2 rounded-lg bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)]
+ text-white"
+            >
               <FontAwesomeIcon icon={faRobot} />
               <span>AI Assistant</span>
             </button>
@@ -138,7 +158,11 @@ const ManagerSideBar = ({ collapsed, setCollapsed, mobileOpen, setMobileOpen }) 
           <div
             className={`
               flex items-center gap-3 px-2 py-2 rounded-lg transition-all
-              ${collapsed && !mobileOpen ? "justify-center" : "hover:bg-gray-100"}
+              ${
+                collapsed && !mobileOpen
+                  ? "justify-center"
+                  : "hover:bg-gray-100"
+              }
             `}
           >
             <img
@@ -149,13 +173,17 @@ const ManagerSideBar = ({ collapsed, setCollapsed, mobileOpen, setMobileOpen }) 
 
             {(!collapsed || mobileOpen) && (
               <div className="flex flex-col">
-                <p className="text-md text-[#0F172A] font-bold">{profileInfo.username}</p>
-                <p className="text-sm text-gray-600 font-semibold">{profileInfo.role}</p>
+                <p className="text-md text-[#0F172A] font-bold">
+                  {profileInfo.username}
+                </p>
+                <p className="text-sm text-gray-600 font-semibold">
+                  {profileInfo.role}
+                </p>
               </div>
             )}
           </div>
 
-         <Link to={'/login'}>
+          <Link to={"/login"}>
             <button
               className={`
                 mt-3 flex items-center gap-3 text-red-500 px-2 py-2 rounded-lg hover:bg-red-50 w-full transition-all
@@ -167,7 +195,7 @@ const ManagerSideBar = ({ collapsed, setCollapsed, mobileOpen, setMobileOpen }) 
                 <span className="text-sm font-medium">Logout</span>
               )}
             </button>
-         </Link>
+          </Link>
         </div>
 
         {/* Collapse Button (Desktop Only) */}

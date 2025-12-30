@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   faGauge,
@@ -13,6 +13,7 @@ import {
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { getUserDetailsAPI } from "../../services/allAPI";
 
 const navItems = [
   { name: "Dashboard", href: "/employee/dashboard", icon: faGauge },
@@ -23,8 +24,38 @@ const navItems = [
   { name: "Settings", href: "/employee/settings", icon: faCog },
 ];
 
-const EmployeeSideBar = ({ collapsed, setCollapsed, mobileOpen, setMobileOpen }) => {
+const EmployeeSideBar = ({
+  collapsed,
+  setCollapsed,
+  mobileOpen,
+  setMobileOpen,
+}) => {
   const location = useLocation();
+  //state to get user details
+  const [profileInfo, setProfileInfo] = useState({
+    email: "",
+    username: "",
+    role: "",
+  });
+
+  //function for getting user details
+  const fetchUserDetails = async () => {
+    try {
+      const result = await getUserDetailsAPI();
+      console.log(result);
+      setProfileInfo({
+        username: result.data.username,
+        role: result.data.role,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  //useeffect for getuserdetails
+  useEffect(() => {
+    fetchUserDetails();
+  }, []);
 
   return (
     <>
@@ -61,12 +92,20 @@ const EmployeeSideBar = ({ collapsed, setCollapsed, mobileOpen, setMobileOpen })
 
         {/* Logo */}
         <div className="h-16 flex items-center justify-between px-4 border-b border-gray-300">
-          {(!collapsed || mobileOpen) ? (
-            <h1 className="text-2xl font-extrabold bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)]
- bg-clip-text text-transparent">CollabAI</h1>
+          {!collapsed || mobileOpen ? (
+            <h1
+              className="text-2xl font-extrabold bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)]
+ bg-clip-text text-transparent"
+            >
+              CollabAI
+            </h1>
           ) : (
-            <span className="text-3xl font-extrabold  bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)]
- bg-clip-text text-transparent">C</span>
+            <span
+              className="text-3xl font-extrabold  bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)]
+ bg-clip-text text-transparent"
+            >
+              C
+            </span>
           )}
         </div>
 
@@ -92,7 +131,9 @@ const EmployeeSideBar = ({ collapsed, setCollapsed, mobileOpen, setMobileOpen })
               >
                 <FontAwesomeIcon
                   icon={item.icon}
-                  className={`text-lg ${active ? "text-white" : "text-gray-500"}`}
+                  className={`text-lg ${
+                    active ? "text-white" : "text-gray-500"
+                  }`}
                 />
 
                 {(!collapsed || mobileOpen) && (
@@ -106,8 +147,10 @@ const EmployeeSideBar = ({ collapsed, setCollapsed, mobileOpen, setMobileOpen })
         {/* AI Assistant */}
         {(!collapsed || mobileOpen) && (
           <div className="px-4 mt-6">
-            <button className="w-full flex items-center gap-3 px-3 py-2 rounded-lg bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)]
- text-white">
+            <button
+              className="w-full flex items-center gap-3 px-3 py-2 rounded-lg bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)]
+ text-white"
+            >
               <FontAwesomeIcon icon={faRobot} />
               <span>AI Assistant</span>
             </button>
@@ -119,7 +162,11 @@ const EmployeeSideBar = ({ collapsed, setCollapsed, mobileOpen, setMobileOpen })
           <div
             className={`
               flex items-center gap-3 px-2 py-2 rounded-lg transition-all
-              ${collapsed && !mobileOpen ? "justify-center" : "hover:bg-gray-100"}
+              ${
+                collapsed && !mobileOpen
+                  ? "justify-center"
+                  : "hover:bg-gray-100"
+              }
             `}
           >
             <img
@@ -130,8 +177,8 @@ const EmployeeSideBar = ({ collapsed, setCollapsed, mobileOpen, setMobileOpen })
 
             {(!collapsed || mobileOpen) && (
               <div className="flex flex-col">
-                <p className="text-sm font-semibold">Alex Johnson</p>
-                <p className="text-xs text-gray-500">Project Manager</p>
+                <p className="text-md text-[#0F172A] font-bold">{profileInfo.username}</p>
+                <p className="text-sm text-gray-600 font-semibold">{profileInfo.role}</p>
               </div>
             )}
           </div>

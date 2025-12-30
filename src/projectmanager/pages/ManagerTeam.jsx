@@ -233,8 +233,7 @@ const ManagerTeam = () => {
               </div>
               <button
                 onClick={() => setTeamModalOpen(!teamModalOpen)}
-                classN
-                ame="text-gray-600 hover:text-red-500 text-3xl font-bold leading-none"
+                className="text-gray-600 hover:text-red-500 text-3xl font-bold leading-none"
               >
                 &times;
               </button>
