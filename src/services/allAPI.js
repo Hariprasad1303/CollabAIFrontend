@@ -65,7 +65,7 @@ export const getNotificationAPI=async()=>{
 export const updateProfileAPI = async (reqBody) => {
   const token = sessionStorage.getItem("token");
   console.log(token);
-  return await commonAPI("PUT", `${serverURL}/manager/profile`, reqBody, {
+  return await commonAPI("PUT", `${serverURL}/profile`, reqBody, {
     Authorization: `Bearer ${token}`,
   });
 };

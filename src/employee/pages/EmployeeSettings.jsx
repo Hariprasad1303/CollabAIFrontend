@@ -3,6 +3,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { faGoogle, faGithub } from "@fortawesome/free-brands-svg-icons";
+import { ToastContainer,toast } from "react-toastify";
+import { updateProfileAPI } from "../../services/allAPI";
 
 const EmployeeSettings = () => {
   const [profile, setProfile] = useState(true);
@@ -12,6 +14,37 @@ const EmployeeSettings = () => {
   const [taskOn, setTaskOn] = useState(false);
   const [projectOn, setProjectOn] = useState(false);
   const [summaryOn, setSummaryOn] = useState(false);
+  //state for update profile
+  const [profileDetails, setProfileDetails] = useState({
+    username: "",
+    email: "",
+  });
+
+  //function for update profile
+  const handleUpdateProfile = async () => {
+    const { username, email } = profileDetails;
+    console.log(username, email);
+    try {
+      const result = await updateProfileAPI({ username, email });
+      console.log(result);
+      if (result.status == 200) {
+        if (result.data?.user) {
+          localStorage.setItem("user", JSON.stringify(result.data.user));
+        }
+        toast.success("Profile information updated succesfully");
+        //profile updation
+        setProfileDetails({
+          username: result.data.username,
+          email: result.data.email,
+        });
+      } else {
+        toast.warning(result.response?.data?.message || "update failed");
+      }
+    } catch (err) {
+      console.error(err);
+      console.log(err.response?.data?.message);
+    }
+  };
   return (
     // Tabs creation
     <div className="flex flex-col items-start">
@@ -98,35 +131,27 @@ const EmployeeSettings = () => {
           </div>
           <div>
             <form className="p-4 flex flex-col justify-between gap-y-5">
-              {/* First name and Last name */}
+              {/* username*/}
               <div className="flex flex-col md:flex-row justify-between gap-5 md:gap-10">
                 {/* First name */}
                 <div className="flex-1">
                   <label
                     className="block text-[#0F172A] font-bold text-3xs mb-1"
-                    htmlFor="fName"
+                    htmlFor="userName"
                   >
-                    First Name
+                    Username
                   </label>
                   <input
+                    value={profileDetails.username}
+                    onChange={(e) => {
+                      setProfileDetails({
+                        ...profileDetails,
+                        username: e.target.value,
+                      });
+                    }}
                     type="text"
                     placeholder="Hariprasad V V"
-                    id="fName"
-                    className="border border-[#64748B] w-full p-2 text-sm font-bold rounded-lg focus:outline-none focus:border-transparent focus:ring-2 focus:ring-purple-500"
-                  />
-                </div>
-                {/* last name */}
-                <div className="flex-1">
-                  <label
-                    className="block text-[#0F172A] font-bold text-3xs mb-1"
-                    htmlFor="lName"
-                  >
-                    Last Name
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="V V"
-                    id="lName"
+                    id="userName"
                     className="border border-[#64748B] w-full p-2 text-sm font-bold rounded-lg focus:outline-none focus:border-transparent focus:ring-2 focus:ring-purple-500"
                   />
                 </div>
@@ -140,32 +165,24 @@ const EmployeeSettings = () => {
                   Email
                 </label>
                 <input
+                  value={profileDetails.email}
+                  onChange={(e) => {
+                    setProfileDetails({
+                      ...profileDetails,
+                      email: e.target.value,
+                    });
+                  }}
                   type="email"
                   placeholder="name@example.com"
                   id="email"
                   className="w-full border border-[#64748B]  p-2 text-sm font-bold rounded-lg focus:outline-none focus:border-transparent focus:ring-2 focus:ring-purple-500"
                 />
               </div>
-              {/* Role */}
-              <div>
-                <label
-                  htmlFor="role"
-                  className="block text-[#0F172A] font-bold text-lg mb-1"
-                >
-                  Role
-                </label>
-                <input
-                  type="text"
-                  placeholder="Manager"
-                  id="role"
-                  className="w-full border border-[#64748B]  p-2 text-sm font-bold rounded-lg focus:outline-none focus:border-transparent focus:ring-2 focus:ring-purple-500"
-                />
-              </div>
               {/* Save Changes BUtton */}
               <div>
-                <button className="bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)] text-white px-5 py-3 font-bold rounded-lg">
-                  Save Changes
-                </button>
+                  <button type="button" onClick={handleUpdateProfile} className="bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)] text-white px-5 py-3 font-bold rounded-lg">
+                    Save Changes
+                  </button>
               </div>
             </form>
           </div>
@@ -344,6 +361,7 @@ const EmployeeSettings = () => {
           </div>
         </div>
       )}
+      <ToastContainer position="top-center" theme="colored" autoClose={2000} />
     </div>
   );
 };

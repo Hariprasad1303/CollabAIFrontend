@@ -183,17 +183,19 @@ const EmployeeSideBar = ({
             )}
           </div>
 
-          <button
-            className={`
-              mt-3 flex items-center gap-3 text-red-500 px-2 py-2 rounded-lg hover:bg-red-50 w-full transition-all
-              ${collapsed && !mobileOpen ? "justify-center" : ""}
-            `}
-          >
-            <FontAwesomeIcon icon={faRightFromBracket} />
-            {(!collapsed || mobileOpen) && (
-              <span className="text-sm font-medium">Logout</span>
-            )}
-          </button>
+          <Link to={'/login'}>
+            <button
+              className={`
+                mt-3 flex items-center gap-3 text-red-500 px-2 py-2 rounded-lg hover:bg-red-50 w-full transition-all
+                ${collapsed && !mobileOpen ? "justify-center" : ""}
+              `}
+            >
+              <FontAwesomeIcon icon={faRightFromBracket} />
+              {(!collapsed || mobileOpen) && (
+                <span className="text-sm font-medium">Logout</span>
+              )}
+            </button>
+          </Link>
         </div>
 
         {/* Collapse Button (Desktop Only) */}
