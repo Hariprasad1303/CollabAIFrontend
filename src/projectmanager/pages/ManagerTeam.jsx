@@ -59,6 +59,28 @@ const ManagerTeam = () => {
       //api call
       const result = await projectInviteAPI({ username, email, projectName });
       console.log(result);
+      if(result.status==200){
+        toast.success("Project invitation invitation sent successfully");
+        setInvitationDetails({
+          username:"",
+          email:"",
+          projectName:""
+        })
+      }else if(result.status==400){
+        toast.warning(result.response.data);
+         setInvitationDetails({
+          username:"",
+          email:"",
+          projectName:""
+        })
+      }else{
+        toast.warning("something went wrong");
+         setInvitationDetails({
+          username:"",
+          email:"",
+          projectName:""
+        })
+      }
     }
   };
   const [teamModalOpen, setTeamModalOpen] = useState(false);

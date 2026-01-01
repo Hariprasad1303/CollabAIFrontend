@@ -13,7 +13,7 @@ import {
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { getUserDetailsAPI } from "../../services/allAPI";
+import { getNotificationAPI, getUserDetailsAPI } from "../../services/allAPI";
 
 const navItems = [
   { name: "Dashboard", href: "/employee/dashboard", icon: faGauge },
@@ -56,7 +56,7 @@ const EmployeeSideBar = ({
   useEffect(() => {
     fetchUserDetails();
   }, []);
-
+  
   return (
     <>
       {/* Mobile Backdrop */}
