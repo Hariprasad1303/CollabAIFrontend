@@ -47,6 +47,13 @@ export const getProjectCountAPI = async () => {
   });
 };
 
+//delete project api
+export const deleteProjectAPI=async(projectId)=>{
+  const token=sessionStorage.getItem("token");
+  console.log(token);
+  return await commonAPI("DELETE",`${serverURL}/manager/project/${projectId}`,"",{Authorization:`Bearer ${token}`});  
+}
+
 //project invite api
 export const projectInviteAPI=async(reqBody)=>{
   const token=sessionStorage.getItem("token");

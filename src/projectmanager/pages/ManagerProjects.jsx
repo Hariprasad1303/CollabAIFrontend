@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { Form, Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
-import { getProjectAPI, projectAPI } from "../../services/allAPI";
+import { deleteProjectAPI, getProjectAPI, projectAPI } from "../../services/allAPI";
 
 const ManagerProjects = () => {
   //state for getting project details
@@ -83,7 +83,6 @@ const ManagerProjects = () => {
 
   //state for project icon
   const [projectIcon, setProjectIcon] = useState(null);
-
   const getProjects = async () => {
     try {
       const result = await getProjectAPI();
@@ -95,6 +94,18 @@ const ManagerProjects = () => {
       res.status(500).json(err);
     }
   };
+
+   //functions for getting the projects
+  const handleDeleteProject=async(projectId)=>{
+    try{
+      await deleteProjectAPI(projectId);
+      toast.success("project deleted succesfully");
+      getProjects();
+    }catch(err){
+      console.log(err);
+      toast.warning("Project deletion failed");
+    }
+  }
   const [modalOpen, setModalOpen] = useState(false);
   return (
     <div className="flex flex-col gap-3 p-4 w-full">
@@ -195,7 +206,7 @@ const ManagerProjects = () => {
                 {projectIcon==project._id && (
                   <div className="absolute top-10 right-2 w-36 bg-white shadow-xl rounded-lg p-2 z-50">
                     <button className="block w-full text-left px-2 py-1 hover:bg-gray-100">Update</button>
-                    <button className="block w-full text-left px-2 py-1 hover:bg-gray-100">Delete</button>
+                    <button onClick={()=>handleDeleteProject(project._id)} className="block w-full text-left px-2 py-1 hover:bg-gray-100">Delete</button>
                     <button className="block w-full text-left px-2 py-1 hover:bg-gray-100">Add task</button>
                   </div>
                 )}
