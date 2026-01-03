@@ -99,12 +99,6 @@ const EmployeeProjects = () => {
                 >
                   {project.priority}
                 </span>
-                <button>
-                  <FontAwesomeIcon
-                    icon={faEllipsisVertical}
-                    className="absolute ms-4 top-4 right-2"
-                  />
-                </button>
                 {/* projet name */}
                 <h2 className="text-lg font-bold text-gray-800 group-hover:text-purple-600 transition">
                   {project.name}

@@ -81,6 +81,9 @@ const ManagerProjects = () => {
     return matchPriority && matchSearch;
   });
 
+  //state for project icon
+  const [projectIcon, setProjectIcon] = useState(null);
+
   const getProjects = async () => {
     try {
       const result = await getProjectAPI();
@@ -182,12 +185,21 @@ const ManagerProjects = () => {
                 >
                   {project.priority}
                 </span>
-                <button>
+                <button onClick={() => setProjectIcon(projectIcon===project._id ?null:project._id)}>
                   <FontAwesomeIcon
                     icon={faEllipsisVertical}
                     className="absolute ms-4 top-4 right-2"
                   />
                 </button>
+                {/* project card modal starting */}
+                {projectIcon==project._id && (
+                  <div className="absolute top-10 right-2 w-36 bg-white shadow-xl rounded-lg p-2 z-50">
+                    <button className="block w-full text-left px-2 py-1 hover:bg-gray-100">Update</button>
+                    <button className="block w-full text-left px-2 py-1 hover:bg-gray-100">Delete</button>
+                    <button className="block w-full text-left px-2 py-1 hover:bg-gray-100">Add task</button>
+                  </div>
+                )}
+                {/* projectcard modal ending */}
                 {/* projet name */}
                 <h2 className="text-lg font-bold text-gray-800 group-hover:text-purple-600 transition">
                   {project.name}
@@ -227,7 +239,7 @@ const ManagerProjects = () => {
           </div>
         </div>
       </div>
-      {/* Modal  start*/}
+      {/* project Modal  start*/}
       {modalOpen && (
         <div
           onClick={() => setModalOpen(!modalOpen)}
@@ -346,7 +358,7 @@ const ManagerProjects = () => {
           </div>
         </div>
       )}
-      {/* Modal End */}
+      {/* project Modal End */}
       <ToastContainer position="top-center" theme="colored" autoClose={2000} />
     </div>
   );
