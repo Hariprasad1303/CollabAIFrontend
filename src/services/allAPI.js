@@ -54,6 +54,13 @@ export const deleteProjectAPI=async(projectId)=>{
   return await commonAPI("DELETE",`${serverURL}/manager/project/${projectId}`,"",{Authorization:`Bearer ${token}`});  
 }
 
+//update project api
+export const updateProjectAPI=async(projectId,reqBody)=>{
+  const token=sessionStorage.getItem("token");
+  console.log(token);
+  return await commonAPI("PUT",`${serverURL}/manager/project/${projectId}`,reqBody,{Authorization:`Bearer ${token}`})
+}
+
 //project invite api
 export const projectInviteAPI=async(reqBody)=>{
   const token=sessionStorage.getItem("token");

@@ -7,7 +7,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { Form, Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
-import { deleteProjectAPI, getProjectAPI, projectAPI } from "../../services/allAPI";
+import {
+  deleteProjectAPI,
+  getProjectAPI,
+  projectAPI,
+  updateProjectAPI,
+} from "../../services/allAPI";
 
 const ManagerProjects = () => {
   //state for getting project details
@@ -20,6 +25,21 @@ const ManagerProjects = () => {
   //state for getting projects form db
   const [projects, setProjects] = useState([]);
 
+  //state for selected Project
+  const [selectedProject,setSelectedProject]=useState(null);
+
+  //useEffect for defaukltedly filled form for updating project data
+  useEffect(()=>{
+    if(selectedProject){
+      setProjectDetails({
+        name:selectedProject.name,
+        description:selectedProject.description,
+        priority:selectedProject.priority,
+        date:selectedProject.date
+      })
+    }
+  },[selectedProject]);
+  
   //function for creating projects
   const handleCreateProject = async (req, res) => {
     console.log("button clicked");
@@ -95,7 +115,7 @@ const ManagerProjects = () => {
     }
   };
 
-   //functions for getting the projects
+  //functions for deleting the the projects
   const handleDeleteProject=async(projectId)=>{
     try{
       await deleteProjectAPI(projectId);
@@ -103,10 +123,26 @@ const ManagerProjects = () => {
       getProjects();
     }catch(err){
       console.log(err);
-      toast.warning("Project deletion failed");
+      toast.warning("Project Deletion failed")
     }
   }
+  //function for updating the projects
+  const handleUpdateProject = async (projectid) => {
+    try{
+      await updateProjectAPI(selectedProject._id,projectDetails);
+      getProjects();
+      setUpdateModal(false);
+      setSelectedProject(null);
+    }catch(err){
+      console.log(err);
+      toast.warning("Project updation failed");
+    }
+  };
+  // state for  project  create modal
   const [modalOpen, setModalOpen] = useState(false);
+
+  //state for project update modal
+  const [updateModal, setUpdateModal] = useState(false);
   return (
     <div className="flex flex-col gap-3 p-4 w-full">
       {/* first row */}
@@ -196,18 +232,36 @@ const ManagerProjects = () => {
                 >
                   {project.priority}
                 </span>
-                <button onClick={() => setProjectIcon(projectIcon===project._id ?null:project._id)}>
+                <button
+                  onClick={() =>
+                    setProjectIcon(
+                      projectIcon === project._id ? null : project._id
+                    )
+                  }
+                >
                   <FontAwesomeIcon
                     icon={faEllipsisVertical}
                     className="absolute ms-4 top-4 right-2"
                   />
                 </button>
                 {/* project card modal starting */}
-                {projectIcon==project._id && (
+                {projectIcon == project._id && (
                   <div className="absolute top-10 right-2 w-36 bg-white shadow-xl rounded-lg p-2 z-50">
-                    <button className="block w-full text-left px-2 py-1 hover:bg-gray-100">Update</button>
-                    <button onClick={()=>handleDeleteProject(project._id)} className="block w-full text-left px-2 py-1 hover:bg-gray-100">Delete</button>
-                    <button className="block w-full text-left px-2 py-1 hover:bg-gray-100">Add task</button>
+                    <button
+                      onClick={() =>{setSelectedProject(project) ;setUpdateModal(!updateModal)}}
+                      className="block w-full text-left px-2 py-1 hover:bg-gray-100"
+                    >
+                      Update
+                    </button>
+                    <button
+                      onClick={() =>handleDeleteProject(project._id)}
+                      className="block w-full text-left px-2 py-1 hover:bg-gray-100"
+                    >
+                      Delete
+                    </button>
+                    <button className="block w-full text-left px-2 py-1 hover:bg-gray-100">
+                      Add task
+                    </button>
                   </div>
                 )}
                 {/* projectcard modal ending */}
@@ -250,7 +304,7 @@ const ManagerProjects = () => {
           </div>
         </div>
       </div>
-      {/* project Modal  start*/}
+      {/* project create Modal  start*/}
       {modalOpen && (
         <div
           onClick={() => setModalOpen(!modalOpen)}
@@ -369,7 +423,128 @@ const ManagerProjects = () => {
           </div>
         </div>
       )}
-      {/* project Modal End */}
+      {/* project create Modal End */}
+      {/* project update Modal  start*/}
+      {updateModal && (
+        <div
+          onClick={() => setUpdateModal(!updateModal)}
+          className="flex justify-center items-center fixed inset-0 bg-black/10 backdrop-blur-sm z-50"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white w-[92%] max-w-3xl rounded-2xl shadow-2xl mx-4 p-4"
+          >
+            {/* Header Portion */}
+            <div className="flex justify-between items-start mb-4">
+              <h3 className="text-2xl md:text-3xl font-bold text-[#0F172A]">
+                Create New Project
+              </h3>
+              <button
+                onClick={() => setModalOpen(!modalOpen)}
+                className="text-gray-600 hover:text-red-500 text-3xl font-bold leading-none"
+              >
+                &times;
+              </button>
+            </div>
+            {/* body Portion */}
+            <form className="space-y-6">
+              {/* project Name */}
+              <div>
+                <label className="block text-gray-700 font-semibold mb-2">
+                  Project Name
+                </label>
+                <input
+                  value={projectDetails.name}
+                  onChange={(e) => {
+                    setProjectDetails({
+                      ...projectDetails,
+                      name: e.target.value,
+                    });
+                  }}
+                  type="text"
+                  className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-600 outline-none"
+                  placeholder="Enter project name..."
+                />
+              </div>
+              {/* project  Description*/}
+              <div>
+                <label className="block text-gray-700 font-semibold mb-2">
+                  Project Description
+                </label>
+                <textarea
+                  value={projectDetails.description}
+                  onChange={(e) => {
+                    setProjectDetails({
+                      ...projectDetails,
+                      description: e.target.value,
+                    });
+                  }}
+                  className="w-full h-32 border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-600 outline-none"
+                  placeholder="Enter project description..."
+                ></textarea>
+              </div>
+              {/* project due and project priority */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-gray-700 font-semibold mb-2">
+                    Project priority
+                  </label>
+                  <select
+                    value={projectDetails.priority}
+                    onChange={(e) => {
+                      setProjectDetails({
+                        ...projectDetails,
+                        priority: e.target.value,
+                      });
+                    }}
+                    className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-600 outline-none"
+                  >
+                    <option value="">Select an Priority</option>
+                    <option value="High">High</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Low">Low</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-gray-700 font-semibold mb-2">
+                    Project Date
+                  </label>
+                  <input
+                    value={projectDetails.date}
+                    onChange={(e) => {
+                      setProjectDetails({
+                        ...projectDetails,
+                        date: e.target.value,
+                      });
+                    }}
+                    type="date"
+                    className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-600 outline-none"
+                    placeholder="Enter project name..."
+                  />
+                </div>
+              </div>
+              {/* Bottopm Buttons */}
+              <div className="flex justify-end gap-4 mt-4">
+                <button
+                  type="button"
+                  className="px-3 py-2 bg-red-600 text-white rounded-lg font-semibold"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={()=>handleUpdateProject()
+                  }
+                  type="button"
+                  className="bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)] text-md md:text-lg text-white font-semibold px-3 py-2 rounded-lg"
+                >
+                  Update changes
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+      {/* project update Modal End */}
       <ToastContainer position="top-center" theme="colored" autoClose={2000} />
     </div>
   );
