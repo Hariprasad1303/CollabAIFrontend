@@ -1,4 +1,8 @@
-import { faArrowRight, faEllipsisVertical, faPlus } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowRight,
+  faEllipsisVertical,
+  faPlus,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useContext, useEffect, useState } from "react";
 import { ProjectContext } from "../../context/projectContext";
@@ -6,63 +10,79 @@ import { Link } from "react-router-dom";
 
 const EmployeeProjects = () => {
   const { projects } = useContext(ProjectContext);
- 
-  //context
-  const {projects:EmployeeProjects}=useContext(ProjectContext);
 
+  //context
+  const { projects:[] } = useContext(ProjectContext);
+
+  //state for project filtering
+  const [projectFilter, setProjectFilter] = useState("All priorities");
+
+  //state for search term  
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredProjects=projects.filter((project)=>{
+    const matchPriority=projectFilter=="All priorities"||project.priority==projectFilter;
+    const matchSearch=project.name.toLowerCase().includes(searchTerm.toLowerCase()) || project.description.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchPriority && matchSearch;
+  })
   const [modalOpen, setModalOpen] = useState(false);
   return (
     <div className="flex flex-col gap-3 p-4 w-full">
+      {/* heading section */}
       <div className=" flex-3 flex flex-col md:flex-row items-center justify-start md:justify-between gap-4">
         <div className="flex flex-col  gap-2">
           <h2 className="text-3xl font-extrabold text-[#0F172A]">Projects</h2>
           <p className="text-[#64748B]">Manage and track all your projects</p>
         </div>
       </div>
+      {/* input and filtering section */}
       <div className=" flex-1 flex justify-between items-center gap-4 mt-4">
         <div className="flex-3">
           <input
+            value={searchTerm}
+            onChange={(e)=>setSearchTerm(e.target.value)}
             type="text"
             placeholder="Search projects"
-            className="border-2 w-full p-3  border-gray-300"
+            className="w-full p-3 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-600"
           />
         </div>
         <div className="flex-1 w-full">
           {/* use select for clearer UX */}
-          <select className="border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-500 outline-none">
+          <select value={projectFilter} onChange={(e)=>setProjectFilter(e.target.value)} className="border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-500 outline-none">
             <option
               className="bg-purple-600 hover:bg-pink-500 text-white text-md font-semibold p-2"
               value=""
             >
-              Select priority
+              All priorities
             </option>
             <option
               className="bg-purple-600 hover:bg-pink-500 text-white text-md font-semibold p-2"
-              value="high"
+              value="High"
             >
               High
             </option>
             <option
               className="bg-purple-600 hover:bg-pink-500 text-white text-md font-semibold p-2"
-              value="medium"
+              value="Medium"
             >
               Medium
             </option>
             <option
               className="bg-purple-600 hover:bg-pink-500 text-white text-md font-semibold p-2"
-              value="low"
+              value="Low"
             >
               Low
             </option>
           </select>
         </div>
       </div>
+      {/* project container */}
       <div className="flex flex-col md:flex-row w-full ">
         {/*sub containetr  */}
         <div className="flex-1 flex flex-col bg-white rounded-xl p-6">
           {/* project Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {EmployeeProjects.map((project) => (
+            {filteredProjects.map((project) => (
               <div
                 key={project._id}
                 className="relative flex flex-col gap-3 bg-white shadow-md hover:shadow-2xl rounded-xl transition-all duration-300 border border-gray-200 p-6"
