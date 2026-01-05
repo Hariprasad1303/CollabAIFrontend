@@ -9,10 +9,8 @@ import { ProjectContext } from "../../context/projectContext";
 import { Link } from "react-router-dom";
 
 const EmployeeProjects = () => {
-  const { projects } = useContext(ProjectContext);
-
   //context
-  const { projects:[] } = useContext(ProjectContext);
+  const { projects=[] } = useContext(ProjectContext);
 
   //state for project filtering
   const [projectFilter, setProjectFilter] = useState("All priorities");
@@ -20,7 +18,8 @@ const EmployeeProjects = () => {
   //state for search term  
   const [searchTerm, setSearchTerm] = useState("");
 
-  const filteredProjects=projects.filter((project)=>{
+  const filteredProjects=(projects||[]).filter((project)=>{
+    if(!project) return false;
     const matchPriority=projectFilter=="All priorities"||project.priority==projectFilter;
     const matchSearch=project.name.toLowerCase().includes(searchTerm.toLowerCase()) || project.description.toLowerCase().includes(searchTerm.toLowerCase());
     return matchPriority && matchSearch;

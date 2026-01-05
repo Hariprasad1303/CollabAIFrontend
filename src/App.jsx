@@ -32,6 +32,7 @@ import AdminAnalytics from "./admin/pages/AdminAnalytics";
 import AdminProjects from "./admin/pages/AdminProjects";
 import AdminSettings from "./admin/pages/AdminSettings";
 import ProjectDetails from "./projectmanager/pages/ProjectDetails";
+import ManagerTaskProvider from "./projectmanager/pages/ManagerTaskProvider";
 
 
 function App() {
@@ -47,6 +48,7 @@ function App() {
           <Route index element={<ManagerDashboard />} />
           <Route path="dashboard" element={<ManagerDashboard />} />
           <Route path="projects" element={<ManagerProjects />} />
+          <Route path="tasks" element={<ManagerTaskProvider/>}/>
           <Route path="projects/:id" element={<ProjectDetails />} />
           <Route path="team" element={<ManagerTeam />} />
           <Route path="analytics" element={<ManagerAnalytics />} />

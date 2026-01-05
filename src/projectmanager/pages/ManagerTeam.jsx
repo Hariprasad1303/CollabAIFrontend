@@ -314,6 +314,7 @@ const ManagerTeam = () => {
                     }}
                     className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-600 outline-none"
                   >
+                  <option value="">Select the Priority</option>
                   {
                     projects.map((project)=>(
                       <option key={project._id} value={project.name}>{project.name}</option>

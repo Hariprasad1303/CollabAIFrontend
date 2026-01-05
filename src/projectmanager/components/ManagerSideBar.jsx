@@ -18,6 +18,7 @@ import { getUserDetailsAPI } from "../../services/allAPI";
 const navItems = [
   { name: "Dashboard", href: "/manager/dashboard", icon: faGauge },
   { name: "Projects", href: "/manager/projects", icon: faFolderOpen },
+  { name: "Tasks", href: "/manager/tasks", icon: faFolderOpen },
   { name: "Team", href: "/manager/team", icon: faUsers },
   { name: "Analytics", href: "/manager/analytics", icon: faChartLine },
   { name: "Chat", href: "/manager/chat", icon: faComments },
