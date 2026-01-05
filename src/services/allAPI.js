@@ -15,7 +15,7 @@ export const loginAPI = async (reqBody) => {
 export const getUserDetailsAPI = async () => {
   const token = sessionStorage.getItem("token");
   console.log(token);
-  return await commonAPI("GET", `${serverURL}/userdetails`, null, {
+  return await commonAPI("GET", `${serverURL}/userdetails`,null, {
     Authorization: `Bearer ${token}`,
   });
 };
@@ -38,7 +38,7 @@ export const getProjectAPI = async () => {
   });
 };
 
-//get project api
+//get project count api
 export const getProjectCountAPI = async () => {
   const token = sessionStorage.getItem("token");
   console.log(token);

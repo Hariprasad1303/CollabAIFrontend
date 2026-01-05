@@ -36,11 +36,8 @@ const Login = () => {
     console.log(result);
     if(result.status==200){
       toast.success("Login successfull");
-      console.log(result.data.existingUser)
       sessionStorage.setItem("existingUser",JSON.stringify(result.data.existingUser));
-      console.log(result.data.token)
       sessionStorage.setItem("token",result.data.token);
-      console.log(result.data.existingUser.role);
       if(result.data.existingUser.role=="employee"){
         navigate('/employee');
       }else if(result.data.existingUser.role=="manager"){

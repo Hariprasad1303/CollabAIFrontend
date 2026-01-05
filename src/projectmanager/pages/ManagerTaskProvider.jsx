@@ -12,9 +12,10 @@ import {
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import { getProjectAPI } from "../../services/allAPI";
 const ManagerTaskProvider = () => {
   //state for showing add task modal
   const [teamModalOpen, setTeamModalOpen] = useState(false);
@@ -27,7 +28,25 @@ const ManagerTaskProvider = () => {
 
   //state for tab
   const [activeTab, setActiveTab] = useState("List View");  
-  
+
+  //state for getting details of project created by manager
+  const [projects,setProjects]=useState([]);
+
+  //function for getting project details
+  const getManagerProjects=async()=>{
+    try{
+      const result=await getProjectAPI();
+      console.log(result);
+      setProjects(result.data);
+    }catch(err){
+      console.log(err);
+      toast.warning("Unable to fetch project details");
+    }
+  }
+  //page effect
+  useEffect(()=>{
+    getManagerProjects();
+  },[])
   return (
     <div className="flex flex-col gap-6 p-4 w-full">
       {/* task management heading  Heading */}
@@ -162,26 +181,13 @@ const ManagerTaskProvider = () => {
                 className="bg-purple-600 hover:bg-pink-500 text-white text-md font-semibold p-2"
                 value=""
               >
-                pselect project
+                Select project
               </option>
-              <option
-                className="bg-purple-600 hover:bg-pink-500 text-white text-md font-semibold p-2"
-                value="High"
-              >
-                High
-              </option>
-              <option
-                className="bg-purple-600 hover:bg-pink-500 text-white text-md font-semibold p-2"
-                value="Medium"
-              >
-                Medium
-              </option>
-              <option
-                className="bg-purple-600 hover:bg-pink-500 text-white text-md font-semibold p-2"
-                value="Low"
-              >
-                Low
-              </option>
+              {
+                projects.map((project)=>(
+                  <option key={project._id} value={project.name}>{project.name}</option>
+                ))
+              }
             </select>
           </div>
         </div>
@@ -230,11 +236,10 @@ const ManagerTaskProvider = () => {
                     icon={faEnvelopeSquare}
                     className="text-purple-600 text-4xl font-bold me-2"
                   />
-                  Invite Team Member
+                  Create Task
                 </h3>
                 <p className="text-[#64748B] text-md  font-semibold ">
-                  Send an invitation email to add a new team member to your
-                  project.
+                 Create a task and assign it to a team member
                 </p>
               </div>
               <button
@@ -278,7 +283,7 @@ const ManagerTaskProvider = () => {
                         </label>
                         <select className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-600 outline-none">
                           <option value="">Select the Priority</option>
-                          <options value="collabai">collabai</options>
+                          <option value="collabai">collabai</option>
                         </select>
                       </div>
                     </div>
@@ -290,8 +295,10 @@ const ManagerTaskProvider = () => {
                           Project
                         </label>
                         <select className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-600 outline-none">
-                          <option value="">Select the Priority</option>
-                          <options value="collabai">collabai</options>
+                          <option value="">Project</option>
+                          {projects.map((project)=>(
+                            <option key={project._id} value={project.name}>{project.name}</option>
+                          ))}
                         </select>
                       </div>
                     </div>
@@ -306,7 +313,7 @@ const ManagerTaskProvider = () => {
                         </label>
                         <select className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-600 outline-none">
                           <option value="">Select the Priority</option>
-                          <options value="collabai">collabai</options>
+                          <option value="collabai">collabai</option>
                         </select>
                       </div>
                     </div>
@@ -319,7 +326,7 @@ const ManagerTaskProvider = () => {
                         </label>
                         <select className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-600 outline-none">
                           <option value="">Select the Priority</option>
-                          <options value="collabai">collabai</options>
+                          <option value="collabai">collabai</option>
                         </select>
                       </div>
                     </div>

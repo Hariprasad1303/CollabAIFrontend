@@ -7,7 +7,7 @@ import {
   getNotificationAPI,
 } from "../../services/allAPI";
 import { toast } from "react-toastify";
-import { ProjectContext } from "../../context/projectContext";
+import { ProjectContext } from "../../context/ProjectContext";
 
 const EmployeeNavbar = () => {
   const { fetchProjects }=useContext(ProjectContext);
@@ -23,10 +23,10 @@ const EmployeeNavbar = () => {
   const fetchNotifications = async () => {
     try {
       const result = await getNotificationAPI();
-      console.log(result);
       setNotifications(result.data);
     } catch (err) {
       console.log(err);
+      setNotifications([]);
     }
   };
   //useEffect for fetch Notifications

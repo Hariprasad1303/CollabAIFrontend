@@ -44,8 +44,8 @@ const EmployeeSideBar = ({
       const result = await getUserDetailsAPI();
       console.log(result);
       setProfileInfo({
-        username: result.data.username,
-        role: result.data.role,
+        username: result?.data?.username,
+        role: result?.data?.role,
       });
     } catch (err) {
       console.log(err);
