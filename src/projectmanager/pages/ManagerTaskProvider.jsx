@@ -14,39 +14,177 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
-import { getProjectAPI } from "../../services/allAPI";
+import { toast, ToastContainer } from "react-toastify";
+import {
+  createTaskAPI,
+  getProjectAPI,
+  getProjectMembersAPI,
+} from "../../services/allAPI";
 const ManagerTaskProvider = () => {
   //state for showing add task modal
   const [teamModalOpen, setTeamModalOpen] = useState(false);
 
   // tab
-   const tabs = [
-      { id: "listview", label: "List view", icon: faList },
-      { id: "tableview", label: "Table", icon: faTable },
-    ];
+  const tabs = [
+    { id: "listview", label: "List view", icon: faList },
+    { id: "tableview", label: "Table", icon: faTable },
+  ];
 
+  //state for task details
+  const [taskDetails, setTaskDetails] = useState({
+    title: "",
+    description: "",
+    priority: "",
+  });
   //state for tab
-  const [activeTab, setActiveTab] = useState("List View");  
+  const [activeTab, setActiveTab] = useState("List View");
 
   //state for getting details of project created by manager
-  const [projects,setProjects]=useState([]);
+  const [projects, setProjects] = useState([]);
+
+  //state for members
+  const [members, setMembers] = useState([]);
+
+  //state for getting selected projects
+  const [selectedProject, setSelectedProject] = useState("");
+
+  //state for assigned project
+  const [assignedUser, setAssignedUser] = useState("");
+
+  //state for projectDuedate
+  const [projectDuedate, setProjectDueDate] = useState("");
+
+  //state for task due date
+  const [taskDuedate, setTaskDueDate] = useState("");
 
   //function for getting project details
-  const getManagerProjects=async()=>{
-    try{
-      const result=await getProjectAPI();
+  const getManagerProjects = async () => {
+    try {
+      const result = await getProjectAPI();
       console.log(result);
       setProjects(result.data);
-    }catch(err){
+    } catch (err) {
       console.log(err);
       toast.warning("Unable to fetch project details");
     }
-  }
+  };
   //page effect
-  useEffect(()=>{
+  useEffect(() => {
     getManagerProjects();
-  },[])
+  }, []);
+
+  //fetch project memebers for each projects
+  const getFetchMembers = async (projectId) => {
+    try {
+      const result = await getProjectMembersAPI(projectId);
+      console.log(result.data);
+      setMembers(result.data);
+    } catch (err) {
+      console.log(err);
+      toast.warning("Fetching prof project memebers failed");
+    }
+  };
+
+  //function to project change
+  const handleProjectChange = async (e) => {
+    const projectId = e.target.value;
+    console.log(projectId);
+    setSelectedProject(projectId);
+    //get project
+    const project = projects.find((p) => String(p._id) === String(projectId));
+    console.log(project);
+
+    //get members
+    if (project) {
+      //project due date fetching
+      if (project.date) {
+        setProjectDueDate(project.date.split("T")[0]);
+      } else {
+        setProjectDueDate("");
+      }
+      getFetchMembers(projectId);
+    } else {
+      setMembers([]);
+      setProjectDueDate("");
+    }
+  };
+
+  //function to create tasks
+  const handleCreateTask = async (req, res) => {
+    try {
+      // validate require fields
+      const { title, description, priority } = taskDetails;
+      console.log(
+        title,
+        description,
+        priority,
+        selectedProject,
+        taskDuedate,
+        assignedUser
+      );
+
+      const payload = {
+        title: title,
+        description: description,
+        priority: priority,
+        projectId: selectedProject,
+        dueDate: taskDuedate,
+        assignedTo: assignedUser,
+      };
+      if (
+        !title ||
+        !description ||
+        !priority ||
+        !selectedProject ||
+        !taskDuedate ||
+        !assignedUser
+      ) {
+        toast.info("Please fill all the fields");
+      } else {
+        //api call
+        const result = await createTaskAPI(payload);
+        console.log(result);
+        if (result.status == 200) {
+          toast.success("task created suceesfully");
+          setTaskDetails({
+            title: "",
+            description: "",
+            priority: "",
+          });
+          setAssignedUser("");
+          setSelectedProject("");
+          setTaskDueDate("");
+          setTeamModalOpen(false);
+        } else if (result.status == 400) {
+          toast.warning(result.response.data);
+          setTaskDetails({
+            title: "",
+            description: "",
+            priority: "",
+          });
+          setAssignedUser("");
+          setSelectedProject("");
+          setTaskDueDate("");
+          setTeamModalOpen(false);
+        } else {
+          toast.warning("Something went wrong");
+          setTaskDetails({
+            title: "",
+            description: "",
+            priority: "",
+          });
+          setAssignedUser("");
+          setSelectedProject("");
+          setTaskDueDate("");
+          setTeamModalOpen(false);
+        }
+      }
+    } catch (err) {
+      console.log(err);
+      toast.warning("task creation failed");
+    }
+  };
+
   return (
     <div className="flex flex-col gap-6 p-4 w-full">
       {/* task management heading  Heading */}
@@ -183,11 +321,11 @@ const ManagerTaskProvider = () => {
               >
                 Select project
               </option>
-              {
-                projects.map((project)=>(
-                  <option key={project._id} value={project.name}>{project.name}</option>
-                ))
-              }
+              {projects.map((project) => (
+                <option key={project._id} value={project.name}>
+                  {project.name}
+                </option>
+              ))}
             </select>
           </div>
         </div>
@@ -239,7 +377,7 @@ const ManagerTaskProvider = () => {
                   Create Task
                 </h3>
                 <p className="text-[#64748B] text-md  font-semibold ">
-                 Create a task and assign it to a team member
+                  Create a task and assign it to a team member
                 </p>
               </div>
               <button
@@ -257,6 +395,10 @@ const ManagerTaskProvider = () => {
                   Task title
                 </label>
                 <input
+                  value={taskDetails.title}
+                  onChange={(e) =>
+                    setTaskDetails({ ...taskDetails, title: e.target.value })
+                  }
                   type="text"
                   className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-600 outline-none"
                   placeholder="Design sign up page"
@@ -268,6 +410,13 @@ const ManagerTaskProvider = () => {
                   Task description
                 </label>
                 <textarea
+                  value={taskDetails.description}
+                  onChange={(e) =>
+                    setTaskDetails({
+                      ...taskDetails,
+                      description: e.target.value,
+                    })
+                  }
                   className="w-full h-32 border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-600 outline-none"
                   placeholder="Enter Task description..."
                 ></textarea>
@@ -281,9 +430,18 @@ const ManagerTaskProvider = () => {
                         <label className="block text-gray-700 font-semibold mb-2">
                           Asssigned To
                         </label>
-                        <select className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-600 outline-none">
+                        <select
+                          value={assignedUser}
+                          onChange={(e) => setAssignedUser(e.target.value)}
+                          className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-600 outline-none"
+                        >
                           <option value="">Select the Priority</option>
-                          <option value="collabai">collabai</option>
+                          {Array.isArray(members) &&
+                            members.map((m) => (
+                              <option key={m.userId._id} value={m.userId._id}>
+                                {m.userId.email}
+                              </option>
+                            ))}
                         </select>
                       </div>
                     </div>
@@ -294,11 +452,18 @@ const ManagerTaskProvider = () => {
                         <label className="block text-gray-700 font-semibold mb-2">
                           Project
                         </label>
-                        <select className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-600 outline-none">
+                        <select
+                          value={selectedProject}
+                          onChange={handleProjectChange}
+                          className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-600 outline-none"
+                        >
                           <option value="">Project</option>
-                          {projects.map((project)=>(
-                            <option key={project._id} value={project.name}>{project.name}</option>
-                          ))}
+                          {Array.isArray(projects) &&
+                            projects.map((project) => (
+                              <option key={project._id} value={project._id}>
+                                {project.name}
+                              </option>
+                            ))}
                         </select>
                       </div>
                     </div>
@@ -311,9 +476,20 @@ const ManagerTaskProvider = () => {
                         <label className="block text-gray-700 font-semibold mb-2">
                           Priority
                         </label>
-                        <select className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-600 outline-none">
+                        <select
+                          value={taskDetails.priority}
+                          onChange={(e) =>
+                            setTaskDetails({
+                              ...taskDetails,
+                              priority: e.target.value,
+                            })
+                          }
+                          className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-600 outline-none"
+                        >
                           <option value="">Select the Priority</option>
-                          <option value="collabai">collabai</option>
+                          <option value="High">High</option>
+                          <option value="Medium">Medium</option>
+                          <option value="Low">Low</option>
                         </select>
                       </div>
                     </div>
@@ -321,13 +497,22 @@ const ManagerTaskProvider = () => {
                   <div className="flex-1">
                     <div className="grid grid-cols-1 gap-6">
                       <div>
-                        <label className="block text-gray-700 font-semibold mb-2">
+                        <label
+                          htmlFor="dueDate"
+                          className="block text-gray-700 font-semibold mb-2"
+                        >
                           Due Date
                         </label>
-                        <select className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-600 outline-none">
-                          <option value="">Select the Priority</option>
-                          <option value="collabai">collabai</option>
-                        </select>
+                        <input
+                          type="date"
+                          min={new Date().toISOString().split("T")[0]}
+                          max={projectDuedate}
+                          value={taskDuedate}
+                          onChange={(e) => setTaskDueDate(e.target.value)}
+                          placeholder="choose task due date"
+                          id="dueDate"
+                          className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-600 outline-none"
+                        />
                       </div>
                     </div>
                   </div>
@@ -340,6 +525,7 @@ const ManagerTaskProvider = () => {
                 </button>
                 <button
                   type="button"
+                  onClick={handleCreateTask}
                   className="bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)] text-md md:text-lg text-white font-semibold px-3 py-2 rounded-lg"
                 >
                   <FontAwesomeIcon

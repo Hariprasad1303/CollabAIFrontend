@@ -42,7 +42,6 @@ const ManagerProjects = () => {
   
   //function for creating projects
   const handleCreateProject = async (req, res) => {
-    console.log("button clicked");
     const { name, description, priority, date } = projectDetails;
     console.log(name, description, priority, date);
     if (!name || !description || !priority || !date) {

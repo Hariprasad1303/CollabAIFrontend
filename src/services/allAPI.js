@@ -15,7 +15,7 @@ export const loginAPI = async (reqBody) => {
 export const getUserDetailsAPI = async () => {
   const token = sessionStorage.getItem("token");
   console.log(token);
-  return await commonAPI("GET", `${serverURL}/userdetails`,null, {
+  return await commonAPI("GET", `${serverURL}/userdetails`, null, {
     Authorization: `Bearer ${token}`,
   });
 };
@@ -31,7 +31,7 @@ export const projectAPI = async (reqBody) => {
 
 // get project api
 export const getProjectAPI = async () => {
-  const token =sessionStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   console.log(token);
   return await commonAPI("GET", `${serverURL}/manager/projects`, null, {
     Authorization: `Bearer ${token}`,
@@ -48,39 +48,55 @@ export const getProjectCountAPI = async () => {
 };
 
 //delete project api
-export const deleteProjectAPI=async(projectId)=>{
-  const token=sessionStorage.getItem("token");
+export const deleteProjectAPI = async (projectId) => {
+  const token = sessionStorage.getItem("token");
   console.log(token);
-  return await commonAPI("DELETE",`${serverURL}/manager/project/${projectId}`,"",{Authorization:`Bearer ${token}`});  
-}
+  return await commonAPI(
+    "DELETE",
+    `${serverURL}/manager/project/${projectId}`,
+    "",
+    { Authorization: `Bearer ${token}` }
+  );
+};
 
 //update project api
-export const updateProjectAPI=async(projectId,reqBody)=>{
-  const token=sessionStorage.getItem("token");
+export const updateProjectAPI = async (projectId, reqBody) => {
+  const token = sessionStorage.getItem("token");
   console.log(token);
-  return await commonAPI("PUT",`${serverURL}/manager/project/${projectId}`,reqBody,{Authorization:`Bearer ${token}`})
-}
+  return await commonAPI(
+    "PUT",
+    `${serverURL}/manager/project/${projectId}`,
+    reqBody,
+    { Authorization: `Bearer ${token}` }
+  );
+};
 
 //project invite api
-export const projectInviteAPI=async(reqBody)=>{
-  const token=sessionStorage.getItem("token");
+export const projectInviteAPI = async (reqBody) => {
+  const token = sessionStorage.getItem("token");
   console.log(token);
-  return await  commonAPI("POST",`${serverURL}/manager/invite`,reqBody,{Authorization:`Bearer ${token}`});
-}
+  return await commonAPI("POST", `${serverURL}/manager/invite`, reqBody, {
+    Authorization: `Bearer ${token}`,
+  });
+};
 
 //get notification API
-export const getNotificationAPI=async()=>{
-  const token=sessionStorage.getItem("token");
+export const getNotificationAPI = async () => {
+  const token = sessionStorage.getItem("token");
   console.log(token);
-  return await commonAPI("GET",`${serverURL}/notifications`,null,{Authorization:`Bearer ${token}`});
-}
+  return await commonAPI("GET", `${serverURL}/notifications`, null, {
+    Authorization: `Bearer ${token}`,
+  });
+};
 
 //get isRead API
-export const isReadAPI=async(id)=>{
-  const token=sessionStorage.getItem("toekn");
+export const isReadAPI = async (id) => {
+  const token = sessionStorage.getItem("toekn");
   console.log(token);
-  return await commonAPI("PUT",`${serverURL}/${id}/read`,"",{Authorization:`Bearer ${token}`})
-}
+  return await commonAPI("PUT", `${serverURL}/${id}/read`, "", {
+    Authorization: `Bearer ${token}`,
+  });
+};
 
 //update profile
 export const updateProfileAPI = async (reqBody) => {
@@ -92,23 +108,54 @@ export const updateProfileAPI = async (reqBody) => {
 };
 
 //accept an invite
-export const acceptInviteAPI=async(inviteId)=>{
-  const token=sessionStorage.getItem("token");
+export const acceptInviteAPI = async (inviteId) => {
+  const token = sessionStorage.getItem("token");
   console.log(token);
-  return await commonAPI("PUT",`${serverURL}/accept/${inviteId}`,{},{Authorization:`Bearer ${token}`});
-}
+  return await commonAPI(
+    "PUT",
+    `${serverURL}/accept/${inviteId}`,
+    {},
+    { Authorization: `Bearer ${token}` }
+  );
+};
 
 //reject an invite
-export const rejectInviteAPI=async(inviteId)=>{
-  const token=sessionStorage.getItem("token");
+export const rejectInviteAPI = async (inviteId) => {
+  const token = sessionStorage.getItem("token");
   console.log(token);
-  return await commonAPI("PUT",`${serverURL}/reject/${inviteId}`,{},{Authorization:`Bearer ${token}`});
-}
-
+  return await commonAPI(
+    "PUT",
+    `${serverURL}/reject/${inviteId}`,
+    {},
+    { Authorization: `Bearer ${token}` }
+  );
+};
 
 //get employee projects
-export const getEmployeeProjectAPI=async()=>{
+export const getEmployeeProjectAPI = async () => {
+  const token = sessionStorage.getItem("token");
+  console.log(token);
+  return await commonAPI("GET", `${serverURL}/employee/my-projects`, null, {
+    Authorization: `Bearer ${token}`,
+  });
+};
+
+//get projectMembers api
+export const getProjectMembersAPI = async(projectId) => {
+  //logic
+  const token = sessionStorage.getItem("token");
+  console.log(token);
+  return await commonAPI(
+    "GET",
+    `${serverURL}/manager/project-members/${projectId}`,
+    null,
+    { Authorization: `Bearer ${token}` }
+  );
+};
+
+//create task api
+export const createTaskAPI=async(reqBody)=>{
   const token=sessionStorage.getItem("token");
   console.log(token);
-  return await commonAPI("GET",`${serverURL}/employee/my-projects`,null,{Authorization:`Bearer ${token}`});
+  return await commonAPI("POST",`${serverURL}/manager/create-task`,reqBody,{Authorization:`Bearer ${token}`})
 }
