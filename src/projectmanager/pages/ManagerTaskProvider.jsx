@@ -20,6 +20,7 @@ import {
   getAllTaskAPI,
   getProjectAPI,
   getProjectMembersAPI,
+  taskCountAPI,
 } from "../../services/allAPI";
 const ManagerTaskProvider = () => {
   //state for showing add task modal
@@ -42,6 +43,9 @@ const ManagerTaskProvider = () => {
   });
   //state for tab
   const [activeTab, setActiveTab] = useState("List View");
+
+  //state for task count
+  const [taskCount,setTaskCount]=useState(0);
 
   //state for getting details of project created by manager
   const [projects, setProjects] = useState([]);
@@ -197,10 +201,23 @@ const ManagerTaskProvider = () => {
     }
   };
 
+  //const to get task count
+  const getTaskCount=async()=>{
+    try{
+      const result=await taskCountAPI();
+      console.log(result.data);
+      setTaskCount(result.data);
+    }catch(err){
+      console.log(err);
+      toast.warning("Task count fetching failed");
+    }
+  }
+
   //page loading effect
   useEffect(() => {
     getManagerProjects();
     getAlltasks();
+    getTaskCount();
   }, []);
 
   return (
@@ -241,7 +258,7 @@ const ManagerTaskProvider = () => {
           </div>
           <div>
             <p className="text-[#64748B] text-lg font-bold mb-2">Total Tasks</p>
-            <span className="text-[#0F172A] text-4xl font-extrabold">8</span>
+            <span className="text-[#0F172A] text-4xl font-extrabold">{taskCount}</span>
           </div>
         </div>
         <div className="flex-1 flex items-center justify-start w-full md:4/12 p-6 shadow-md bg-white border-gray-300 border gap-3 rounded-md">

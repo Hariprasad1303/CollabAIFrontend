@@ -166,3 +166,10 @@ export const getAllTaskAPI=async(projectId)=>{
   console.log(token);
   return await commonAPI("GET",`${serverURL}/manager/tasks`,null,{Authorization:`Bearer ${token}`})
 }
+
+//get task count
+export const taskCountAPI=async()=>{
+  const token=sessionStorage.getItem("token");
+  console.log(token);
+  return await commonAPI("GET",`${serverURL}/manager/tasks/count`,null,{Authorization:`Bearer ${token}`});
+}
