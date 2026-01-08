@@ -16,6 +16,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { getProjectCountAPI, getUserDetailsAPI, taskCountAPI } from "../../services/allAPI";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 const ManagerDashboard = () => {
   //state to count number of projects manager handling
@@ -131,27 +132,33 @@ const ManagerDashboard = () => {
           </p>
         </div>
         <div className="flex flex-col  md:flex-row items-center gap-6">
-          <button className="bg-purple-700 text-white px-3 py-3 rounded-md md:w-auto">
-            <FontAwesomeIcon
-              icon={faPlus}
-              className="text-white text-md mx-1"
-            />
-            New Project
-          </button>
-          <button className="bg-purple-700 text-white px-4 py-3 rounded-md md:w-auto">
-            <FontAwesomeIcon
-              icon={faComment}
-              className="text-white text-md mx-1"
-            />
-            Assign tasks
-          </button>
-          <button className="bg-purple-700 text-white px-3 py-3 rounded-md md:w-auto">
-            <FontAwesomeIcon
-              icon={faComment}
-              className="text-white text-md mx-1"
-            />
-            Team Chat
-          </button>
+          <Link to={'/manager/projects'}>
+            <button className="bg-purple-700 text-white px-3 py-3 rounded-md md:w-auto">
+              <FontAwesomeIcon
+                icon={faPlus}
+                className="text-white text-md mx-1"
+              />
+              New Project
+            </button>
+          </Link>
+          <Link to={'/manager/tasks'}>
+            <button className="bg-purple-700 text-white px-4 py-3 rounded-md md:w-auto">
+              <FontAwesomeIcon
+                icon={faComment}
+                className="text-white text-md mx-1"
+              />
+              Assign tasks
+            </button>
+          </Link>
+          <Link to={'/manager/chat'}>
+            <button className="bg-purple-700 text-white px-3 py-3 rounded-md md:w-auto">
+              <FontAwesomeIcon
+                icon={faComment}
+                className="text-white text-md mx-1"
+              />
+              Team Chat
+            </button>
+          </Link>
         </div>
       </div>
       {/* Tasks */}
@@ -254,13 +261,15 @@ const ManagerDashboard = () => {
             </p>
           </div>
           <div className="mx-auto">
-            <button className="bg-purple-600 text-white px-3 md:px-4 py-2 md:py-3 rounded-lg">
-              <FontAwesomeIcon
-                icon={faPlus}
-                className="text-white text-md md:text-xl mx-1.5"
-              />
-              New Projects
-            </button>
+           <Link to={'/manager/projects'}>
+              <button className="bg-purple-600 text-white px-3 md:px-4 py-2 md:py-3 rounded-lg">
+                <FontAwesomeIcon
+                  icon={faPlus}
+                  className="text-white text-md md:text-xl mx-1.5"
+                />
+                New Projects
+              </button>
+           </Link>
           </div>
         </div>
         <div className="flex-1 flex flex-col gap-4 bg-linear-to-br from-cyan-400 via-blue-500 to-purple-600 shadow-lg rounded-lg p-4">
