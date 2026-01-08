@@ -14,11 +14,16 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
-import { getProjectCountAPI, getUserDetailsAPI } from "../../services/allAPI";
+import { getProjectCountAPI, getUserDetailsAPI, taskCountAPI } from "../../services/allAPI";
+import { toast } from "react-toastify";
 
 const ManagerDashboard = () => {
   //state to count number of projects manager handling
   const [projectCount, setProjectCount] = useState(0);
+
+  //state to hold  task stats
+  const [taskStats,setTaskStats]=useState(0);
+
   const [profileInfo, setProfileInfo] = useState({
     email: "",
     username: "",
@@ -46,14 +51,22 @@ const ManagerDashboard = () => {
     }
   };
 
-  // page loading effect
-  useEffect(() => {
-    fetchProjectCount();
-  }, []);
+  const getTaskStats=async()=>{
+    try{
+     const result=await taskCountAPI();
+     console.log(result.data);
+     setTaskStats(result.data);    
+    }catch(err){
+      console.log(err);
+      toast.warning("Fetching of task stats failed");
+    }
+  }
 
   //page loading effect
   useEffect(() => {
     fetchUserDetails();
+    fetchProjectCount();
+    getTaskStats();
   }, []);
   return (
     <div className="flex flex-col gap-6">
@@ -169,7 +182,7 @@ const ManagerDashboard = () => {
               Total Tasks
             </h4>
             <span className="font-extrabold text-4xl md:text-5xl text-[#0F172A]">
-              0
+              {taskStats.count}
             </span>
             <p className="text-[#0F172A] font-semibold text-sm md:text-md">
               <FontAwesomeIcon icon={faArrowDown} className="text-red-600" />
@@ -189,7 +202,7 @@ const ManagerDashboard = () => {
               Completed
             </h4>
             <span className="font-extrabold text-4xl md:text-5xl text-[#0F172A]">
-              0
+              {taskStats.completed}
             </span>
             <p className="text-[#0F172A] font-semibold text-sm md:text-md">
               <FontAwesomeIcon icon={faArrowDown} className="text-red-600" />

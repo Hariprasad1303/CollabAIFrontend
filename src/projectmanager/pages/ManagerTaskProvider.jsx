@@ -45,7 +45,7 @@ const ManagerTaskProvider = () => {
   const [activeTab, setActiveTab] = useState("List View");
 
   //state for task count
-  const [taskCount,setTaskCount]=useState(0);
+  const [taskStats,setTaskStats]=useState({});
 
   //state for getting details of project created by manager
   const [projects, setProjects] = useState([]);
@@ -206,7 +206,7 @@ const ManagerTaskProvider = () => {
     try{
       const result=await taskCountAPI();
       console.log(result.data);
-      setTaskCount(result.data);
+      setTaskStats(result.data);
     }catch(err){
       console.log(err);
       toast.warning("Task count fetching failed");
@@ -258,7 +258,7 @@ const ManagerTaskProvider = () => {
           </div>
           <div>
             <p className="text-[#64748B] text-lg font-bold mb-2">Total Tasks</p>
-            <span className="text-[#0F172A] text-4xl font-extrabold">{taskCount}</span>
+            <span className="text-[#0F172A] text-4xl font-extrabold">{taskStats.count}</span>
           </div>
         </div>
         <div className="flex-1 flex items-center justify-start w-full md:4/12 p-6 shadow-md bg-white border-gray-300 border gap-3 rounded-md">
@@ -269,8 +269,8 @@ const ManagerTaskProvider = () => {
             />
           </div>
           <div>
-            <p className="text-[#64748B] text-lg font-bold mb-2">In Progress</p>
-            <span className="text-[#0F172A] text-4xl font-extrabold">0</span>
+            <p className="text-[#64748B] text-lg font-bold mb-2">Todo</p>
+            <span className="text-[#0F172A] text-4xl font-extrabold">{taskStats.todos}</span>
           </div>
         </div>
         <div className="flex-1 flex items-center justify-start w-full md:4/12 p-6 shadow-md bg-white border-gray-300 border gap-3 rounded-md">
@@ -283,9 +283,9 @@ const ManagerTaskProvider = () => {
           <div>
             <div>
               <p className="text-[#64748B] text-lg font-bold mb-2">
-                Unassigned
+                In Progress
               </p>
-              <span className="text-[#0F172A] text-4xl font-extrabold">0</span>
+              <span className="text-[#0F172A] text-4xl font-extrabold">{taskStats.inProgress}</span>
             </div>
           </div>
         </div>
@@ -299,7 +299,7 @@ const ManagerTaskProvider = () => {
           <div>
             <div>
               <p className="text-[#64748B] text-lg font-bold mb-2">Completed</p>
-              <span className="text-[#0F172A] text-4xl font-extrabold">0</span>
+              <span className="text-[#0F172A] text-4xl font-extrabold">{taskStats.completed}</span>
             </div>
           </div>
         </div>
