@@ -17,6 +17,7 @@ import { Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import {
   createTaskAPI,
+  getAllTaskAPI,
   getProjectAPI,
   getProjectMembersAPI,
 } from "../../services/allAPI";
@@ -29,6 +30,9 @@ const ManagerTaskProvider = () => {
     { id: "listview", label: "List view", icon: faList },
     { id: "tableview", label: "Table", icon: faTable },
   ];
+
+  //set Task
+  const [tasks, setTasks] = useState([]);
 
   //state for task details
   const [taskDetails, setTaskDetails] = useState({
@@ -68,10 +72,6 @@ const ManagerTaskProvider = () => {
       toast.warning("Unable to fetch project details");
     }
   };
-  //page effect
-  useEffect(() => {
-    getManagerProjects();
-  }, []);
 
   //fetch project memebers for each projects
   const getFetchMembers = async (projectId) => {
@@ -143,7 +143,7 @@ const ManagerTaskProvider = () => {
       } else {
         //api call
         const result = await createTaskAPI(payload);
-        console.log(result);
+        console.log(result.data);
         if (result.status == 200) {
           toast.success("task created suceesfully");
           setTaskDetails({
@@ -184,6 +184,24 @@ const ManagerTaskProvider = () => {
       toast.warning("task creation failed");
     }
   };
+
+  //const get all tasks
+  const getAlltasks = async () => {
+    try {
+      const result = await getAllTaskAPI();
+      console.log(result);
+      setTasks(result.data);
+    } catch (err) {
+      console.log(err);
+      toast.warning("Tasks fetching failed successfully");
+    }
+  };
+
+  //page loading effect
+  useEffect(() => {
+    getManagerProjects();
+    getAlltasks();
+  }, []);
 
   return (
     <div className="flex flex-col gap-6 p-4 w-full">
@@ -352,7 +370,47 @@ const ManagerTaskProvider = () => {
         </div>
         {/* Tab Content */}
         <div className="mt-6">
-          {activeTab == "teammembers" && <div>Team members</div>}
+          {activeTab == "listview" && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 p-2 bg-gray-50 min-h-screen">
+              {tasks.map((task) => (
+                <div
+                  key={task._id}
+                  className="w-full sm:w-[280px] md:w-[300px] lg:w-[320px] bg-white rounded-lg shadow-lg border border-gray-100 hover:shadow-xl transition overflow-hidden"
+                >
+                  {/* header */}
+                  <div className="bg-linear-to-r from-purple-500 to-pink-400 p-4">
+                    <h3 className="text-white font-semibold text-lg truncate">
+                      {task.title}
+                    </h3>
+                    <p className="text-indigo-100 text-xs font-semibold mt-2">{task.dueDate.split("T")[0]}</p>
+                  </div>
+                  {/* Body */}
+                  <div className="p-4 space-y-3">
+                    {/*Description*/}
+                    <p className="text-sm text-gray-600 line-clamp-2">
+                      {task.description}
+                    </p>
+                    {/* prioriyty+user */}
+                    <div className="flex justify-between items-center">
+                      {/* priority */}
+                      <span className={`px-3 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-600 ${task.priority=="High"?"text-red-600 bg-red-100":task.priority=="Medium"?"text-yellow-600 bg-yellow-100":"text-green-600 bg-green-100" }`}>
+                        {task.priority}
+                      </span>
+                      {/* user profile */}
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-full bg-linear-to-r from-indigo-600 to-purple-600 flex justify-center items-center text-white text-sm font-bold">
+                          {task.assignedTo.username.trim()[0].toUpperCase() ||
+                            "U"}
+                        </div>
+                        <span>{task.assignedTo.username}</span>
+                      </div>
+                    </div>
+                    <p>{task.projectId.name}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
           {activeTab == "invites" && <div>Pending Invites</div>}
         </div>
       </div>

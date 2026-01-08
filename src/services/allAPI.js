@@ -159,3 +159,10 @@ export const createTaskAPI=async(reqBody)=>{
   console.log(token);
   return await commonAPI("POST",`${serverURL}/manager/create-task`,reqBody,{Authorization:`Bearer ${token}`})
 }
+
+//get tasks
+export const getAllTaskAPI=async(projectId)=>{
+  const token=sessionStorage.getItem("token");
+  console.log(token);
+  return await commonAPI("GET",`${serverURL}/manager/tasks`,null,{Authorization:`Bearer ${token}`})
+}
