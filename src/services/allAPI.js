@@ -180,3 +180,10 @@ export const TaskCountEmployeeAPI=async()=>{
   console.log(token);
   return await commonAPI("GET",`${serverURL}/employee/tasks/count`,null,{Authorization:`Bearer ${token}`})
 }
+
+//get team member details api(employee)
+export const getTeamMemberAPI=async()=>{
+  const token=sessionStorage.getItem("token");
+  console.log(token);
+  return await commonAPI("GET",`${serverURL}/employee/team`,null,{Authorization:`Bearer ${token}`})
+}
