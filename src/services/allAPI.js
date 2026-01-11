@@ -167,9 +167,16 @@ export const getAllTaskAPI=async(projectId)=>{
   return await commonAPI("GET",`${serverURL}/manager/tasks`,null,{Authorization:`Bearer ${token}`})
 }
 
-//get task count
+//get task count api(manager)
 export const taskCountAPI=async()=>{
   const token=sessionStorage.getItem("token");
   console.log(token);
   return await commonAPI("GET",`${serverURL}/manager/tasks/count`,null,{Authorization:`Bearer ${token}`});
+}
+
+//get task count api(employee)
+export const TaskCountEmployeeAPI=async()=>{
+  const token=sessionStorage.getItem("token");
+  console.log(token);
+  return await commonAPI("GET",`${serverURL}/employee/tasks/count`,null,{Authorization:`Bearer ${token}`})
 }

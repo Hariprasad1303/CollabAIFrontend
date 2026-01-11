@@ -16,8 +16,8 @@ import React, { useState } from "react";
 
 const ManagerTeam = () => {
   const tabs = [
-    { id: "teammembers", label: "Team members",icon:faUsers },
-    { id: "invites", label: "pending Invites",icon:faEnvelope },
+    { id: "teammembers", label: "Team members", icon: faUsers },
+    { id: "invites", label: "pending Invites", icon: faEnvelope },
   ];
   const [teamModalOpen, setTeamModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("Team Members");
@@ -139,132 +139,69 @@ const ManagerTeam = () => {
       </div>
       {/* tab */}
       <div className="w-full">
-       {/*Tab Headers */}
-       <div className="inline-flex rounded-lg bg-gray-100 p-2 gap-2">
-       {
-        tabs.map((tab)=>(
-          <button key={tab.id} className={`px-4 py-2 text-sm font-medium rounded-md transition ${activeTab==tab.id?"bg-white text-[#0F172A] font-extrabold shadow-sm":"text-gray-500 hover:text-gray-700"}`} onClick={()=>setActiveTab(tab.id)}>
-          <FontAwesomeIcon icon={tab.icon} className="me-2 text-md"/>{tab.label}
-          </button>
-        ))
-       } 
-       </div>
-       {/* Tab Content */}
-       <div className="mt-6">
-       {activeTab=="teammembers" &&
-       <div>Team members</div>
-       }
-       {activeTab=="invites" &&
-       <div>Pending Invites</div>
-       } 
-       </div>
-      </div>
-      {/* Team Invitation Modal  start*/}
-      {teamModalOpen && (
-        <div
-          onClick={() => setTeamModalOpen(!teamModalOpen)}
-          className="flex justify-center items-center fixed inset-0 bg-black/10 backdrop-blur-sm z-50"
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="bg-white w-[92%] max-w-xl rounded-2xl shadow-2xl mx-4 p-4"
-          >
-            {/* Header Portion */}
-            <div className="flex justify-between items-start mb-4">
-              <div className="flex flex-col gap-2">
-                <h3 className="text-2xl md:text-3xl font-bold text-[#0F172A]">
-                  <FontAwesomeIcon
-                    icon={faEnvelopeSquare}
-                    className="text-purple-600 text-4xl font-bold me-2"
-                  />
-                  Invite Team Member
-                </h3>
-                <p className="text-[#64748B] text-md  font-semibold ">
-                  Send an invitation email to add a new team member to your
-                  project.
-                </p>
-              </div>
-              <button
-                onClick={() => setTeamModalOpen(!teamModalOpen)}
-                classN
-                ame="text-gray-600 hover:text-red-500 text-3xl font-bold leading-none"
-              >
-                &times;
-              </button>
-            </div>
-            {/* body Portion */}
-            <form onSubmit={(e) => e.preventDefault()} className="space-y-6">
-              {/*Invitaion username */}
-              <div>
-                <label className="block text-gray-700 font-semibold mb-2">
-                  Full name
-                </label>
-                <input
-                  type="text"
-                  className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-600 outline-none"
-                  placeholder="John Doe"
-                />
-              </div>
-              {/* Invitaion Email Description*/}
-              <div>
-                <label className="block text-gray-700 font-semibold mb-2">
-                  Email Address
-                </label>
-                <input
-                  type="text"
-                  className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-600 outline-none"
-                  placeholder="college@example.com"
-                />
-              </div>
-              {/* Assigned Project*/}
-              <div className="grid grid-cols-1 gap-6">
-                <div>
-                  <label className="block text-gray-700 font-semibold mb-2">
-                    Asssigned Project
-                  </label>
-                  <select className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-600 outline-none">
-                    <option value="">Select an Priority</option>
-                    <option value="high">CollabAI</option>
-                    <option value="medium">Acessible Scan</option>
-                    <option value="low">Sign2text</option>
-                  </select>
-                </div>
-              </div>
-              {/* Invitation Information */}
-              <div className="flex flex-col">
-                <h5 className=" font-bold text-xl text-[#0F172A]">
-                  What happens next?
-                </h5>
-                <ul className="mt-2">
-                  <li className="mb-1 text-[#64748B] text-sm">
-                    The invitaion will receive an email with link to join
-                  </li>
-                  <li className="mb-1 text-[#64748B] text-sm">
-                    They will be assigned "Team member Role"
-                  </li>
-                  <li className="mb-1 text-[#64748B] text-sm">
-                    The invitaion will expire in 7 days
-                  </li>
-                </ul>
-              </div>
-              {/* Bottopm Buttons */}
-              <div className="flex justify-end gap-4 mt-4">
-                <button className="px-3 py-2 bg-red-600 text-white rounded-lg font-semibold">
-                  Cancel
-                </button>
-                <button className="bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)] text-md md:text-lg text-white font-semibold px-3 py-2 rounded-lg">
-                  <FontAwesomeIcon
-                    icon={faMessage}
-                    className="text-xl text-white me-2"
-                  />{" "}
-                  Send Invitaion
-                </button>
-              </div>
-            </form>
-          </div>
+        {/*Tab Headers */}
+        <div className="inline-flex rounded-lg bg-gray-100 p-2 gap-2">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              className={`px-4 py-2 text-sm font-medium rounded-md transition ${
+                activeTab == tab.id
+                  ? "bg-white text-[#0F172A] font-extrabold shadow-sm"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
+              onClick={() => setActiveTab(tab.id)}
+            >
+              <FontAwesomeIcon icon={tab.icon} className="me-2 text-md" />
+              {tab.label}
+            </button>
+          ))}
         </div>
-      )}
-      {/*Team Invitation Modal End */}
+        {/* Tab Content */}
+        <div className="mt-6">
+          {activeTab == "teammembers" && (
+            <div className="bg-white rounded-2xl shadow-[0_20px_40px_-10px_rgba(0,0,0,0.08)] overflow-hidden">
+                {/*header*/}
+                <div className="p-6">
+                  <h3 className="text-2xl font-semibold text-gray-900">My Team</h3>
+                  <p className="text-sm text-gray-500 mt-1">People working with you across projects</p>
+                </div>
+                {/* Table */}
+                <div className="overflow-x-auto">
+                  <table className="w-full table-fixed">
+                    <thead className="text-gray-500">
+                        <tr className="border-b border-gray-100">
+                          <th className="px-6 py-3 font-medium text-left">Member</th>
+                          <th className="px-6 py-3 font-medium text-left">Project</th>
+                          <th className="px-6 py-3 font-medium text-left">Due Date</th>
+                          <th className="px-6 py-3 font-medium text-left">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="hover:bg-gray-50 transition">
+                        <td className="px-6 py-5 flex items-center gap-4">
+                          <div className="w-11 h-11 rounded-full bg-linear-to-br from-indigo-500 to-purple-600 text-white flex items-center justify-center font-semibold text-lg">N</div>
+                          <div className="">
+                            <p className="font-medium text-gray-900">Nikhila</p>
+                            <p className="text-xs text-gray-400">nikhila@gmail.com</p>
+                          </div>
+                        </td>
+                        <td className="px-6 py-5 font-medium text-gray-700">Collab AI Dashboard</td>
+                        <td className="px-6 py-5 text-gray-500">12 Mar 2026</td>
+                        <td className="px-6 py-5">
+                          <div className="flex items-center gap-2">
+                            <span className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse"></span>
+                            <span className="text-green-600 text-sm font-medium">Active</span>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+            </div>
+          )}
+          {activeTab == "invites" && <div>Pending Invites</div>}
+        </div>
+      </div>
     </div>
   );
 };

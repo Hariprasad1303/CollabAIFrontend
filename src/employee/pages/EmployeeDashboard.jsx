@@ -13,9 +13,30 @@ import {
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import { TaskCountEmployeeAPI } from "../../services/allAPI";
 const EmployeeDashboard = () => {
+  //state for handling employee sadhboad stask
+  const [employeeStats,setEmployeeStats]=useState({});
+
+  //function for getting the employee dahboard status
+  const getEmployeeDashboardStats=async()=>{
+    try{
+      const result=await TaskCountEmployeeAPI();
+      console.log(result.data);
+      setEmployeeStats(result.data);
+    }catch(err){
+      console.log(err);
+      toast.warning("dashbaord stats fetching failed");
+    }
+  }
+
+  //page loading effects
+  useEffect(()=>{
+    getEmployeeDashboardStats();
+  },[])
   return (
     <div className="flex flex-col gap-6">
       {/*Dashboard heading  */}
@@ -32,7 +53,7 @@ const EmployeeDashboard = () => {
           project Manager
         </div>
       </div>
-      {/* manager Respnsiblities */}
+      {/*employee Respnsiblities */}
       <div className="flex flex-col md:flex-row gap-6">
         <div className="flex-1  shadow-4xl border border-gray-200 rounded-lg p-4">
           <FontAwesomeIcon
@@ -107,7 +128,7 @@ const EmployeeDashboard = () => {
               Active projects
             </h4>
             <span className="font-extrabold text-4xl md:text-5xl text-[#0F172A]">
-              0
+              {employeeStats.projectCount}
             </span>
             <p className="text-[#0F172A] font-semibold text-sm md:text-md">
               <FontAwesomeIcon icon={faArrowDown} className="text-red-600" />
@@ -127,7 +148,7 @@ const EmployeeDashboard = () => {
               Total Tasks
             </h4>
             <span className="font-extrabold text-4xl md:text-5xl text-[#0F172A]">
-              0
+              {employeeStats.count}
             </span>
             <p className="text-[#0F172A] font-semibold text-sm md:text-md">
               <FontAwesomeIcon icon={faArrowDown} className="text-red-600" />
@@ -147,7 +168,7 @@ const EmployeeDashboard = () => {
               Completed
             </h4>
             <span className="font-extrabold text-4xl md:text-5xl text-[#0F172A]">
-              0
+              {employeeStats.completed}
             </span>
             <p className="text-[#0F172A] font-semibold text-sm md:text-md">
               <FontAwesomeIcon icon={faArrowDown} className="text-red-600" />
@@ -541,6 +562,7 @@ const EmployeeDashboard = () => {
           </div>
         </div>
       </div>
+      <ToastContainer position="top-center" theme="colored" autoClose={2000} />
     </div>
   );
 };

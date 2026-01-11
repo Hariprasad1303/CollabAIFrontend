@@ -15,7 +15,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { getProjectCountAPI, getUserDetailsAPI, taskCountAPI } from "../../services/allAPI";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { Link } from "react-router-dom";
 
 const ManagerDashboard = () => {
@@ -610,6 +610,7 @@ const ManagerDashboard = () => {
           </div>
         </div>
       </div>
+      <ToastContainer position="top-center" theme="colored" autoClose={2000} />
     </div>
   );
 };
