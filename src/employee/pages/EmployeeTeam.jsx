@@ -13,7 +13,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { getTeamMemberAPI } from "../../services/allAPI";
 
 const ManagerTeam = () => {
@@ -253,6 +253,7 @@ const ManagerTeam = () => {
           {activeTab == "invites" && <div>Pending Invites</div>}
         </div>
       </div>
+      <ToastContainer position="top-center" theme="colored" autoClose={2000} />
     </div>
   );
 };

@@ -187,3 +187,10 @@ export const getTeamMemberAPI=async()=>{
   console.log(token);
   return await commonAPI("GET",`${serverURL}/employee/team`,null,{Authorization:`Bearer ${token}`})
 }
+
+//get team member details (manager)
+export const getTeamMemberManagerAPI=async()=>{
+  const token=sessionStorage.getItem("token");
+  console.log(token);
+  return await commonAPI("GET",`${serverURL}/manager/team`,null,{Authorization:`Bearer ${token}`});
+}

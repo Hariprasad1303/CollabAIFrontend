@@ -14,7 +14,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getProjectAPI, projectInviteAPI } from "../../services/allAPI";
+import { getProjectAPI, getTeamMemberManagerAPI, projectInviteAPI } from "../../services/allAPI";
 import { toast, ToastContainer } from "react-toastify";
 
 const ManagerTeam = () => {
@@ -38,11 +38,6 @@ const ManagerTeam = () => {
     }
   };
 
-  //page reloading  
-  useEffect(()=>{
-    getProjects();
-  },[])
-
   //state for   holding invitation details
   const [invitationDetails, setInvitationDetails] = useState({
     username: "",
@@ -50,7 +45,7 @@ const ManagerTeam = () => {
     projectName: "",
   });
   //function for sending invitation
-  const handleSendInvitation=async() => {
+  const handleSendInvitation = async () => {
     const { username, email, projectName } = invitationDetails;
     console.log(username, email, projectName);
     if (!username || !email || !projectName) {
@@ -59,32 +54,56 @@ const ManagerTeam = () => {
       //api call
       const result = await projectInviteAPI({ username, email, projectName });
       console.log(result);
-      if(result.status==200){
+      if (result.status == 200) {
         toast.success("Project invitation invitation sent successfully");
         setInvitationDetails({
-          username:"",
-          email:"",
-          projectName:""
-        })
-      }else if(result.status==400){
+          username: "",
+          email: "",
+          projectName: "",
+        });
+      } else if (result.status == 400) {
         toast.warning(result.response.data);
-         setInvitationDetails({
-          username:"",
-          email:"",
-          projectName:""
-        })
-      }else{
+        setInvitationDetails({
+          username: "",
+          email: "",
+          projectName: "",
+        });
+      } else {
         toast.warning("something went wrong");
-         setInvitationDetails({
-          username:"",
-          email:"",
-          projectName:""
-        })
+        setInvitationDetails({
+          username: "",
+          email: "",
+          projectName: "",
+        });
       }
     }
   };
+
+  //state for team modal
   const [teamModalOpen, setTeamModalOpen] = useState(false);
+
+  //state for active tab
   const [activeTab, setActiveTab] = useState("Team Members");
+
+  //state for fetching or holding team member details
+  const [teamMember, setTeamMember] = useState({});
+
+  //functions for fetching temamcmember details for manager
+  const getTeamMemberManager=async()=>{
+    try{
+      const result=await getTeamMemberManagerAPI();
+      console.log(result.data);
+      setTeamMember(result.data);
+    }catch(err){
+      console.log(err);
+      toast.warning("Team employee data fetching failed");
+    }
+  }
+
+  //page reloading
+  useEffect(() => {
+    getProjects();getTeamMemberManager();
+  }, []);
   return (
     <div className="flex flex-col gap-6 p-4 w-full">
       {/* Manager Team  Heading */}
@@ -151,7 +170,7 @@ const ManagerTeam = () => {
             <p className="text-[#64748B] text-lg font-bold mb-2">
               Team Members
             </p>
-            <span className="text-[#0F172A] text-4xl font-extrabold">8</span>
+            <span className="text-[#0F172A] text-4xl font-extrabold">{teamMember.totalMembers}</span>
           </div>
         </div>
         <div className="flex-1 flex items-center justify-start w-full md:4/12 p-6 shadow-md bg-white border-gray-300 border gap-3 rounded-md">
@@ -224,7 +243,78 @@ const ManagerTeam = () => {
         </div>
         {/* Tab Content */}
         <div className="mt-6">
-          {activeTab == "teammembers" && <div>Team members</div>}
+          {activeTab == "teammembers" && (
+            <div className="bg-white rounded-2xl shadow-[0_20px_40px_-10px_rgba(0,0,0,0.08)] overflow-hidden">
+              {/*header*/}
+              <div className="p-6">
+                <h3 className="text-2xl font-semibold text-gray-900">
+                  My Team
+                </h3>
+                <p className="text-sm text-gray-500 mt-1">
+                  People working with you across projects
+                </p>
+              </div>
+              {/* Table */}
+              <div className="overflow-x-auto">
+                <table className="w-full table-fixed">
+                  <thead className="text-gray-500">
+                    <tr className="border-b border-gray-100">
+                      <th className="px-6 py-3 font-medium text-left">
+                        Member
+                      </th>
+                      <th className="px-6 py-3 font-medium text-left">
+                        Project
+                      </th>
+                      <th className="px-6 py-3 font-medium text-left">
+                        Due Date
+                      </th>
+                      <th className="px-6 py-3 font-medium text-left">
+                        Status
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {teamMember.members.map((member) => (
+                      <tr
+                        key={member._id}
+                        className="hover:bg-gray-50 transition"
+                      >
+                        <td className="px-6 py-5 flex items-center gap-4">
+                          <div className="w-11 h-11 rounded-full bg-linear-to-br from-indigo-500 to-purple-600 text-white flex items-center justify-center font-semibold text-lg">
+                            {member.username.trim()[0].toUpperCase()}
+                          </div>
+                          <div className="flex flex-col gap-1.5">
+                            <p className="font-medium text-gray-900">
+                              {member.username}
+                            </p>
+                            <p className="text-xs text-gray-400">
+                              {member.email}
+                            </p>
+                          </div>
+                        </td>
+                        <td className="px-6 py-5 font-medium text-gray-700 mx-2">
+                          {member.projects.map((project) => project.name)},
+                        </td>
+                        <td className="px-6 py-5 text-gray-500 mx-2">
+                          {member.projects.map(
+                            (project) => project.dueDate.split("T")[0]
+                          )}
+                        </td>
+                        <td className="px-6 py-5">
+                          <div className="flex items-center gap-2">
+                            <span className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse"></span>
+                            <span className="text-green-600 text-sm font-medium">
+                              Active
+                            </span>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
           {activeTab == "invites" && <div>Pending Invites</div>}
         </div>
       </div>
@@ -314,12 +404,12 @@ const ManagerTeam = () => {
                     }}
                     className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-600 outline-none"
                   >
-                  <option value="">Select the Priority</option>
-                  {
-                    projects.map((project)=>(
-                      <option key={project._id} value={project.name}>{project.name}</option>
-                    ))
-                  }
+                    <option value="">Select the Priority</option>
+                    {projects.map((project) => (
+                      <option key={project._id} value={project.name}>
+                        {project.name}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>
