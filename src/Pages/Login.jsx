@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { loginAPI } from "../services/allAPI";
+import { adminLoginAPI, adminOtpVerificationAPI, loginAPI } from "../services/allAPI";
 import { toast, ToastContainer } from "react-toastify";
 
 const Login = () => {
@@ -18,38 +18,81 @@ const Login = () => {
     { id: "users", label: "Log in(User)", icon: faUsers },
     { id: "admin", label: "Log in(Admin)", icon: faUserShield },
   ];
+
+  //state for holding admin details
+  const [adminDetails, setAdminDetails] = useState({
+    email: "",
+    password: "",
+    otp: "",
+  });
+
+  //state for holding user details(bothemployee and manager)
   const [userDetails, setUserDetails] = useState({
     email: "",
     password: "",
   });
+
   //navigation
-  const navigate=useNavigate();
- //handle login function
- const handleLogin=async()=>{
-  const {email,password}=userDetails;
-  console.log(email,password);
-  if(!email ||!password){
-    toast.info("Please fill the form completedly")
-  }else{
-    //api call
-    const result=await loginAPI({email,password});
-    console.log(result);
-    if(result.status==200){
-      toast.success("Login successfull");
-      sessionStorage.setItem("existingUser",JSON.stringify(result.data.existingUser));
-      sessionStorage.setItem("token",result.data.token);
-      if(result.data.existingUser.role=="employee"){
-        navigate('/employee');
-      }else if(result.data.existingUser.role=="manager"){
-        navigate('/manager');
-      }else{
-        navigate('/login');
+  const navigate = useNavigate();
+  //handle login function
+  const handleLogin = async () => {
+    const { email, password } = userDetails;
+    console.log(email, password);
+    if (!email || !password) {
+      toast.info("Please fill the form completedly");
+    } else {
+      //api call
+      const result = await loginAPI({ email, password });
+      console.log(result);
+      if (result.status == 200) {
+        toast.success("Login successfull");
+        sessionStorage.setItem(
+          "existingUser",
+          JSON.stringify(result.data.existingUser)
+        );
+        sessionStorage.setItem("token", result.data.token);
+        if (result.data.existingUser.role == "employee") {
+          navigate("/employee");
+        } else if (result.data.existingUser.role == "manager") {
+          navigate("/manager");
+        } else {
+          navigate("/login");
+        }
       }
     }
-  }
- }
+  };
   //state for tab creation
   const [activeTab, setActivetab] = useState("users");
+
+  // state for otp verification
+  const [step,setStep]=useState(1);
+
+  //function for admin login  
+  const handleAdminLogin=async()=>{
+    try{
+       if(step==1){
+          //first click send otp
+          await adminLoginAPI({
+            email:adminDetails.email,
+            password:adminDetails.password
+          })
+          toast.info("OTP send to your email");
+          setStep(2)
+       }else{
+          const result=await adminOtpVerificationAPI({
+            email:adminDetails.email,
+            otp:adminDetails.otp
+          })
+          sessionStorage.setItem("token",result.data.token);
+          navigate('/admin/dashboard');
+          setAdminDetails({email:"",password:"",otp:""});
+          setStep(1);
+       } 
+    }catch(err){
+      console.log(err);
+      toast.warning("Admin Login Failed");
+    }
+  }
   return (
     <>
       <div className="max-w-full md:w-full grid grid-cols-1 md:grid-cols-2 md:h-screen">
@@ -203,6 +246,14 @@ const Login = () => {
                           Email
                         </label>
                         <input
+                          disabled={step===2}
+                          value={adminDetails.email}
+                          onChange={(e) =>
+                            setAdminDetails({
+                              ...adminDetails,
+                              email: e.target.value,
+                            })
+                          }
                           type="email"
                           placeholder="name@example.com"
                           id="email"
@@ -218,9 +269,17 @@ const Login = () => {
                           Password
                         </label>
                         <input
-                          type="email"
+                          disabled={step===2}
+                          value={adminDetails.password}
+                          onChange={(e) =>
+                            setAdminDetails({
+                              ...adminDetails,
+                              password: e.target.value,
+                            })
+                          }
+                          type="password"
                           placeholder="create a strong password"
-                          id="email"
+                          id="password"
                           className="w-full border border-[#64748B]  p-2 text-sm font-bold rounded-lg focus:outline-none focus:border-transparent focus:ring-2 focus:ring-purple-500"
                         />
                         <p className="text-[#64748B] font-medium mt-2 text-sm">
@@ -236,9 +295,12 @@ const Login = () => {
                           Admin OTP
                         </label>
                         <input
+                          disabled={step==1}
+                          value={adminDetails.otp}
+                        onChange={(e)=>setAdminDetails({...adminDetails,otp:e.target.value})}
                           type="text"
                           inputMode="numeric"
-                          maxLength={6}
+                          maxLength={5}
                           placeholder="enter 6 digit OTP "
                           className="w-full border border-[#64748B] p-2 text-md fond-bold rounded-lg focus:outline-none focus:ring focus:ring-purple-600"
                           id="adminOtp"
@@ -246,11 +308,9 @@ const Login = () => {
                       </div>
                       {/* create account button */}
                       <div className="w-full">
-                        <Link to={"/login"}>
-                          <button className="w-full bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)] text-white rounded-lg py-4 px-3 text-lg font-bold active:opacity-80  transition duration-300">
-                            Sign In
+                          <button type="button" onClick={handleAdminLogin} className="w-full bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)] text-white rounded-lg py-4 px-3 text-lg font-bold active:opacity-80  transition duration-300">
+                            {step==1?"Send OTP":"Verify OTP"}
                           </button>
-                        </Link>
                       </div>
                       <hr className="w-full border-gray-300 mt-4" />
                       <div className="flex justify-between items-center gap-4">
@@ -269,7 +329,7 @@ const Login = () => {
                           Already Have an Account?
                           <Link to={"/login"}>
                             <span className="font-medium text-purple-500 mx-3">
-                              Sign up for free
+                              Sign In
                             </span>
                           </Link>
                         </p>

@@ -194,3 +194,13 @@ export const getTeamMemberManagerAPI=async()=>{
   console.log(token);
   return await commonAPI("GET",`${serverURL}/manager/team`,null,{Authorization:`Bearer ${token}`});
 }
+
+//admin login api
+export const adminLoginAPI=async(reqBody)=>{
+  return await commonAPI("POST",`${serverURL}/admin/login`,reqBody);
+}
+
+//admin otp verification api
+export const adminOtpVerificationAPI=async(reqBody)=>{
+  return await commonAPI("POST",`${serverURL}/admin/verify-otp`,reqBody);
+}
