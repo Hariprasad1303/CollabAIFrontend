@@ -181,6 +181,23 @@ export const TaskCountEmployeeAPI=async()=>{
   return await commonAPI("GET",`${serverURL}/employee/tasks/count`,null,{Authorization:`Bearer ${token}`})
 }
 
+//api for delete task
+export const deleteTaskAPI = async (taskId) => {
+  const token = sessionStorage.getItem("token");
+  console.log(token);
+  return await commonAPI(
+    "DELETE",
+    `${serverURL}/manager/delete-task/${taskId}`,
+    "",
+    { Authorization: `Bearer ${token}` }
+  );
+};
+
+
+
+//api for update task
+
+
 //get team member details api(employee)
 export const getTeamMemberAPI=async()=>{
   const token=sessionStorage.getItem("token");

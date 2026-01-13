@@ -102,6 +102,7 @@ const ManagerProjects = () => {
 
   //state for project icon
   const [projectIcon, setProjectIcon] = useState(null);
+  
   const getProjects = async () => {
     try {
       const result = await getProjectAPI();

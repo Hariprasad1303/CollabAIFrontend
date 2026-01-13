@@ -1,6 +1,7 @@
 import {
   faClock,
   faClockFour,
+  faEllipsisVertical,
   faEnvelope,
   faEnvelopeSquare,
   faFolderOpen,
@@ -17,6 +18,7 @@ import { Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import {
   createTaskAPI,
+  deleteTaskAPI,
   getAllTaskAPI,
   getProjectAPI,
   getProjectMembersAPI,
@@ -45,7 +47,7 @@ const ManagerTaskProvider = () => {
   const [activeTab, setActiveTab] = useState("List View");
 
   //state for task count
-  const [taskStats,setTaskStats]=useState({});
+  const [taskStats, setTaskStats] = useState({});
 
   //state for getting details of project created by manager
   const [projects, setProjects] = useState([]);
@@ -64,6 +66,9 @@ const ManagerTaskProvider = () => {
 
   //state for task due date
   const [taskDuedate, setTaskDueDate] = useState("");
+
+  //state for task icon
+  const [taskIcon, setTaskIcon] = useState(null);
 
   //function for getting project details
   const getManagerProjects = async () => {
@@ -202,16 +207,28 @@ const ManagerTaskProvider = () => {
   };
 
   //const to get task count
-  const getTaskCount=async()=>{
-    try{
-      const result=await taskCountAPI();
+  const getTaskCount = async () => {
+    try {
+      const result = await taskCountAPI();
       console.log(result.data);
       setTaskStats(result.data);
-    }catch(err){
+    } catch (err) {
       console.log(err);
       toast.warning("Task count fetching failed");
     }
-  }
+  };
+
+  //function for deleting task
+  const handleDeleteTask = async (taskId) => {
+    try {
+      await deleteTaskAPI(taskId);
+      toast.success("task deleted succesfully");
+      getAlltasks();
+    } catch (err) {
+      console.log(err);
+      toast.warning("Task Deletion failed");
+    }
+  };
 
   //page loading effect
   useEffect(() => {
@@ -258,7 +275,9 @@ const ManagerTaskProvider = () => {
           </div>
           <div>
             <p className="text-[#64748B] text-lg font-bold mb-2">Total Tasks</p>
-            <span className="text-[#0F172A] text-4xl font-extrabold">{taskStats.count}</span>
+            <span className="text-[#0F172A] text-4xl font-extrabold">
+              {taskStats.count}
+            </span>
           </div>
         </div>
         <div className="flex-1 flex items-center justify-start w-full md:4/12 p-6 shadow-md bg-white border-gray-300 border gap-3 rounded-md">
@@ -270,7 +289,9 @@ const ManagerTaskProvider = () => {
           </div>
           <div>
             <p className="text-[#64748B] text-lg font-bold mb-2">Todo</p>
-            <span className="text-[#0F172A] text-4xl font-extrabold">{taskStats.todos}</span>
+            <span className="text-[#0F172A] text-4xl font-extrabold">
+              {taskStats.todos}
+            </span>
           </div>
         </div>
         <div className="flex-1 flex items-center justify-start w-full md:4/12 p-6 shadow-md bg-white border-gray-300 border gap-3 rounded-md">
@@ -285,7 +306,9 @@ const ManagerTaskProvider = () => {
               <p className="text-[#64748B] text-lg font-bold mb-2">
                 In Progress
               </p>
-              <span className="text-[#0F172A] text-4xl font-extrabold">{taskStats.inProgress}</span>
+              <span className="text-[#0F172A] text-4xl font-extrabold">
+                {taskStats.inProgress}
+              </span>
             </div>
           </div>
         </div>
@@ -299,7 +322,9 @@ const ManagerTaskProvider = () => {
           <div>
             <div>
               <p className="text-[#64748B] text-lg font-bold mb-2">Completed</p>
-              <span className="text-[#0F172A] text-4xl font-extrabold">{taskStats.completed}</span>
+              <span className="text-[#0F172A] text-4xl font-extrabold">
+                {taskStats.completed}
+              </span>
             </div>
           </div>
         </div>
@@ -392,14 +417,44 @@ const ManagerTaskProvider = () => {
               {tasks.map((task) => (
                 <div
                   key={task._id}
-                  className="w-full sm:w-[280px] md:w-[300px] lg:w-[320px] bg-white rounded-lg shadow-lg border border-gray-100 hover:shadow-xl transition overflow-hidden"
+                  className="relative w-full sm:w-[280px] md:w-[300px] lg:w-[320px] bg-white rounded-lg shadow-lg border border-gray-100 hover:shadow-xl transition overflow-hidden"
                 >
                   {/* header */}
-                  <div className="bg-linear-to-r from-purple-500 to-pink-400 p-4">
-                    <h3 className="text-white font-semibold text-lg truncate">
-                      {task.title}
-                    </h3>
-                    <p className="text-indigo-100 text-xs font-semibold mt-2">{task.dueDate.split("T")[0]}</p>
+                  <div className="flex items-center justify-between bg-linear-to-r from-purple-500 to-pink-400 p-4">
+                    <div>
+                      <h3 className="text-white font-semibold text-lg truncate">
+                        {task.title}
+                      </h3>
+                      <p className="text-indigo-100 text-xs font-semibold mt-2">
+                        {task.dueDate.split("T")[0]}
+                      </p>
+                    </div>
+                    <div>
+                      <button
+                        onClick={() =>
+                          setTaskIcon(taskIcon === task._id ? null : task._id)
+                        }
+                      >
+                        <FontAwesomeIcon
+                          icon={faEllipsisVertical}
+                          className="absolute ms-4 top-4 right-2 text-white text-xl"
+                        />
+                      </button>
+                    </div>
+                    {/* task icon */}
+                    {taskIcon == task._id && (
+                      <div className="absolute top-10 right-2 w-36 bg-white shadow-xl rounded-lg p-2 z-50">
+                        <button className="block w-full text-left px-2 py-1 hover:bg-gray-100">
+                          Update
+                        </button>
+                        <button
+                          onClick={() => handleDeleteTask(task._id)}
+                          className="block w-full text-left px-2 py-1 hover:bg-gray-100"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    )}
                   </div>
                   {/* Body */}
                   <div className="p-4 space-y-3">
@@ -410,7 +465,15 @@ const ManagerTaskProvider = () => {
                     {/* prioriyty+user */}
                     <div className="flex justify-between items-center">
                       {/* priority */}
-                      <span className={`px-3 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-600 ${task.priority=="High"?"text-red-600 bg-red-100":task.priority=="Medium"?"text-yellow-600 bg-yellow-100":"text-green-600 bg-green-100" }`}>
+                      <span
+                        className={`px-3 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-600 ${
+                          task.priority == "High"
+                            ? "text-red-600 bg-red-100"
+                            : task.priority == "Medium"
+                            ? "text-yellow-600 bg-yellow-100"
+                            : "text-green-600 bg-green-100"
+                        }`}
+                      >
                         {task.priority}
                       </span>
                       {/* user profile */}
