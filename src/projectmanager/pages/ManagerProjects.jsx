@@ -143,6 +143,7 @@ const ManagerProjects = () => {
 
   //state for project update modal
   const [updateModal, setUpdateModal] = useState(false);
+  
   return (
     <div className="flex flex-col gap-3 p-4 w-full">
       {/* first row */}

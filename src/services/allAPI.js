@@ -193,10 +193,17 @@ export const deleteTaskAPI = async (taskId) => {
   );
 };
 
-
-
-//api for update task
-
+//api for updating task
+export const updateTaskAPI = async (taskId, reqBody) => {
+  const token = sessionStorage.getItem("token");
+  console.log(token);
+  return await commonAPI(
+    "PUT",
+    `${serverURL}/manager/tasks/${taskId}`,
+    reqBody,
+    { Authorization: `Bearer ${token}` }
+  );
+};
 
 //get team member details api(employee)
 export const getTeamMemberAPI=async()=>{

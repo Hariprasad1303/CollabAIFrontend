@@ -23,10 +23,14 @@ import {
   getProjectAPI,
   getProjectMembersAPI,
   taskCountAPI,
+  updateTaskAPI,
 } from "../../services/allAPI";
 const ManagerTaskProvider = () => {
   //state for showing add task modal
   const [teamModalOpen, setTeamModalOpen] = useState(false);
+
+  //state for task update modal
+  const [updateModalOpen, setUpdateModalOpen] = useState(false);
 
   // tab
   const tabs = [
@@ -44,7 +48,7 @@ const ManagerTaskProvider = () => {
     priority: "",
   });
   //state for tab
-  const [activeTab, setActiveTab] = useState("List View");
+  const [activeTab, setActiveTab] = useState("listview");
 
   //state for task count
   const [taskStats, setTaskStats] = useState({});
@@ -69,6 +73,9 @@ const ManagerTaskProvider = () => {
 
   //state for task icon
   const [taskIcon, setTaskIcon] = useState(null);
+
+  //state for selected Project
+  const [selectedTask, setSelectedTask] = useState(null);
 
   //function for getting project details
   const getManagerProjects = async () => {
@@ -230,12 +237,49 @@ const ManagerTaskProvider = () => {
     }
   };
 
+  //function for updating task
+  const handleUpdateTask = async () => {
+    try {
+      await updateTaskAPI(selectedTask._id, taskDetails);
+      getAlltasks();
+      setUpdateModalOpen(false);
+      setSelectedTask(null);
+    } catch (err) {
+      console.log(err);
+      toast.warning("Task updation failed");
+    }
+  };
+
   //page loading effect
   useEffect(() => {
     getManagerProjects();
     getAlltasks();
     getTaskCount();
   }, []);
+
+  //useEffect
+  useEffect(()=>{
+      if(!selectedTask) return
+
+      //assign task details to updatre form automatically
+      setTaskDetails({
+        title: selectedTask.title,
+        description: selectedTask.description,
+        priority: selectedTask.priority,
+      });
+      
+      //assigned user
+      const assigned=typeof selectedTask.assignedTo==="object"?selectedTask.assignedTo._id:selectedTask.assignedTo;
+      setAssignedUser(assigned||"");
+
+      //project
+      const project=typeof selectedTask.projectId==="object"?selectedTask.projectId._id:selectedTask.projectId;
+      setSelectedProject(project ||"");
+
+      //task due date
+      const safeDate=selectedTask.dueDate?selectedTask.dueDate.split("T")[0]:"";
+      setTaskDueDate(safeDate);
+  },[selectedTask]);
 
   return (
     <div className="flex flex-col gap-6 p-4 w-full">
@@ -444,7 +488,10 @@ const ManagerTaskProvider = () => {
                     {/* task icon */}
                     {taskIcon == task._id && (
                       <div className="absolute top-10 right-2 w-36 bg-white shadow-xl rounded-lg p-2 z-50">
-                        <button className="block w-full text-left px-2 py-1 hover:bg-gray-100">
+                        <button
+                          onClick={() =>{setSelectedTask(task) ;setUpdateModalOpen(!updateModalOpen);setTaskIcon(null)}}
+                          className="block w-full text-left px-2 py-1 hover:bg-gray-100"
+                        >
                           Update
                         </button>
                         <button
@@ -469,7 +516,7 @@ const ManagerTaskProvider = () => {
                         className={`px-3 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-600 ${
                           task.priority == "High"
                             ? "text-red-600 bg-red-100"
-                            : task.priority == "Medium"
+                            : task.priority ==="Medium"
                             ? "text-yellow-600 bg-yellow-100"
                             : "text-green-600 bg-green-100"
                         }`}
@@ -678,6 +725,190 @@ const ManagerTaskProvider = () => {
         </div>
       )}
       {/*Team Invitation Modal End */}
+      {/* task updation modal  start*/}
+      {updateModalOpen && (
+        <div
+          onClick={() => setUpdateModalOpen(!updateModalOpen)}
+          className="flex justify-center items-center fixed inset-0 bg-black/10 backdrop-blur-sm z-50"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white w-[92%] max-w-xl rounded-2xl shadow-2xl mx-4 p-4 overflow-y-auto"
+          >
+            {/* Header Portion */}
+            <div className="flex justify-between items-start mb-4">
+              <div className="flex flex-col gap-2">
+                <h3 className="text-2xl md:text-3xl font-bold text-[#0F172A]">
+                  <FontAwesomeIcon
+                    icon={faEnvelopeSquare}
+                    className="text-purple-600 text-4xl font-bold me-2"
+                  />
+                  Create Task
+                </h3>
+                <p className="text-[#64748B] text-md  font-semibold ">
+                  Create a task and assign it to a team member
+                </p>
+              </div>
+              <button
+                onClick={() => setUpdateModalOpen(!updateModalOpen)}
+                className="text-gray-600 hover:text-red-500 text-3xl font-bold leading-none"
+              >
+                &times;
+              </button>
+            </div>
+            {/* body Portion */}
+            <form className="space-y-6">
+              {/*Task title*/}
+              <div>
+                <label className="block text-gray-700 font-semibold mb-2">
+                  Task title
+                </label>
+                <input
+                  value={taskDetails.title}
+                  onChange={(e) =>
+                    setTaskDetails({ ...taskDetails, title: e.target.value })
+                  }
+                  type="text"
+                  className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-600 outline-none"
+                  placeholder="Design sign up page"
+                />
+              </div>
+              {/*Task Description*/}
+              <div>
+                <label className="block text-gray-700 font-semibold mb-2">
+                  Task description
+                </label>
+                <textarea
+                  value={taskDetails.description}
+                  onChange={(e) =>
+                    setTaskDetails({
+                      ...taskDetails,
+                      description: e.target.value,
+                    })
+                  }
+                  className="w-full h-32 border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-600 outline-none"
+                  placeholder="Enter Task description..."
+                ></textarea>
+              </div>
+              {/* Task details*/}
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-col md:flex-row gap-4">
+                  <div className="flex-1">
+                    <div className="grid grid-cols-1 gap-6">
+                      <div>
+                        <label className="block text-gray-700 font-semibold mb-2">
+                          Asssigned To
+                        </label>
+                        <select
+                          value={assignedUser}
+                          onChange={(e) => setAssignedUser(e.target.value)}
+                          className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-600 outline-none"
+                        >
+                          <option value="">Select the Priority</option>
+                          {Array.isArray(members) &&
+                            members.map((m) => (
+                              <option key={m.userId._id} value={m.userId._id}>
+                                {m.userId.email}
+                              </option>
+                            ))}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex-1">
+                    <div className="grid grid-cols-1 gap-6">
+                      <div>
+                        <label className="block text-gray-700 font-semibold mb-2">
+                          Project
+                        </label>
+                        <select
+                          value={selectedProject}
+                          onChange={handleProjectChange}
+                          className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-600 outline-none"
+                        >
+                          <option value="">Project</option>
+                          {Array.isArray(projects) &&
+                            projects.map((project) => (
+                              <option key={project._id} value={project._id}>
+                                {project.name}
+                              </option>
+                            ))}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex flex-col md:flex-row gap-4">
+                  <div className="flex-1">
+                    <div className="grid grid-cols-1 gap-6">
+                      <div>
+                        <label className="block text-gray-700 font-semibold mb-2">
+                          Priority
+                        </label>
+                        <select
+                          value={taskDetails.priority}
+                          onChange={(e) =>
+                            setTaskDetails({
+                              ...taskDetails,
+                              priority: e.target.value,
+                            })
+                          }
+                          className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-600 outline-none"
+                        >
+                          <option value="">Select the Priority</option>
+                          <option value="High">High</option>
+                          <option value="Medium">Medium</option>
+                          <option value="Low">Low</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex-1">
+                    <div className="grid grid-cols-1 gap-6">
+                      <div>
+                        <label
+                          htmlFor="dueDate"
+                          className="block text-gray-700 font-semibold mb-2"
+                        >
+                          Due Date
+                        </label>
+                        <input
+                          type="date"
+                          min={new Date().toISOString().split("T")[0]}
+                          max={projectDuedate}
+                          value={taskDuedate}
+                          onChange={(e) => setTaskDueDate(e.target.value)}
+                          placeholder="choose task due date"
+                          id="dueDate"
+                          className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-600 outline-none"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {/* Task Buttons */}
+              <div className="flex justify-end gap-4 mt-4">
+                <button className="px-3 py-2 bg-red-600 text-white rounded-lg font-semibold">
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleUpdateTask}
+                  className="bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)] text-md md:text-lg text-white font-semibold px-3 py-2 rounded-lg"
+                >
+                  <FontAwesomeIcon
+                    icon={faMessage}
+                    className="text-xl text-white me-2"
+                  />{" "}
+                  Update Task
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+      {/*Team updation Modal End */}
       <ToastContainer position="top-center" theme="colored" autoClose={2000} />
     </div>
   );
