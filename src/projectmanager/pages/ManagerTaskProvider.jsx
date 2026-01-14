@@ -258,28 +258,36 @@ const ManagerTaskProvider = () => {
   }, []);
 
   //useEffect
-  useEffect(()=>{
-      if(!selectedTask) return
+  useEffect(() => {
+    if (!selectedTask) return;
 
-      //assign task details to updatre form automatically
-      setTaskDetails({
-        title: selectedTask.title,
-        description: selectedTask.description,
-        priority: selectedTask.priority,
-      });
-      
-      //assigned user
-      const assigned=typeof selectedTask.assignedTo==="object"?selectedTask.assignedTo._id:selectedTask.assignedTo;
-      setAssignedUser(assigned||"");
+    //assign task details to updatre form automatically
+    setTaskDetails({
+      title: selectedTask.title,
+      description: selectedTask.description,
+      priority: selectedTask.priority,
+    });
 
-      //project
-      const project=typeof selectedTask.projectId==="object"?selectedTask.projectId._id:selectedTask.projectId;
-      setSelectedProject(project ||"");
+    //assigned user
+    const assigned =
+      typeof selectedTask.assignedTo === "object"
+        ? selectedTask.assignedTo._id
+        : selectedTask.assignedTo;
+    setAssignedUser(assigned || "");
 
-      //task due date
-      const safeDate=selectedTask.dueDate?selectedTask.dueDate.split("T")[0]:"";
-      setTaskDueDate(safeDate);
-  },[selectedTask]);
+    //project
+    const project =
+      typeof selectedTask.projectId === "object"
+        ? selectedTask.projectId._id
+        : selectedTask.projectId;
+    setSelectedProject(project || "");
+
+    //task due date
+    const safeDate = selectedTask.dueDate
+      ? selectedTask.dueDate.split("T")[0]
+      : "";
+    setTaskDueDate(safeDate);
+  }, [selectedTask]);
 
   return (
     <div className="flex flex-col gap-6 p-4 w-full">
@@ -489,7 +497,11 @@ const ManagerTaskProvider = () => {
                     {taskIcon == task._id && (
                       <div className="absolute top-10 right-2 w-36 bg-white shadow-xl rounded-lg p-2 z-50">
                         <button
-                          onClick={() =>{setSelectedTask(task) ;setUpdateModalOpen(!updateModalOpen);setTaskIcon(null)}}
+                          onClick={() => {
+                            setSelectedTask(task);
+                            setUpdateModalOpen(!updateModalOpen);
+                            setTaskIcon(null);
+                          }}
                           className="block w-full text-left px-2 py-1 hover:bg-gray-100"
                         >
                           Update
@@ -513,10 +525,10 @@ const ManagerTaskProvider = () => {
                     <div className="flex justify-between items-center">
                       {/* priority */}
                       <span
-                        className={`px-3 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-600 ${
-                          task.priority == "High"
+                        className={`px-3 py-1 text-xs font-semibold rounded-full ${
+                          task.priority === "High"
                             ? "text-red-600 bg-red-100"
-                            : task.priority ==="Medium"
+                            : task.priority === "Medium"
                             ? "text-yellow-600 bg-yellow-100"
                             : "text-green-600 bg-green-100"
                         }`}

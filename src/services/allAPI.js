@@ -71,6 +71,13 @@ export const updateProjectAPI = async (projectId, reqBody) => {
   );
 };
 
+//api for getting every project details including all stats abou memebers tasks projects etc
+export const getEveryDetailsProjectAPI=async(projectId)=>{
+  const token=sessionStorage.getItem("token");
+  console.log(token);
+  return await commonAPI("GET",`${serverURL}/manager/project-details/${projectId}`,"",{Authorization:`Bearer ${token}`})
+} 
+
 //project invite api
 export const projectInviteAPI = async (reqBody) => {
   const token = sessionStorage.getItem("token");
