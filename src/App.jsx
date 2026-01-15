@@ -33,6 +33,7 @@ import AdminProjects from "./admin/pages/AdminProjects";
 import AdminSettings from "./admin/pages/AdminSettings";
 import ProjectDetails from "./projectmanager/pages/ProjectDetails";
 import ManagerTaskProvider from "./projectmanager/pages/ManagerTaskProvider";
+import EmployeeProjectDetails from "./employee/pages/EmployeeProjectDetails";
 
 
 function App() {
@@ -61,7 +62,7 @@ function App() {
           <Route index element={<EmployeeDashboard />} />
           <Route path="dashboard" element={<EmployeeDashboard />} />
           <Route path="projects" element={<EmployeeProjects />} />
-          <Route path="projects" element={<EmployeeProjects />} />
+          <Route path="projects/:id" element={<EmployeeProjectDetails/>} />
           <Route path="team" element={<EmployeeTeam />} />
           <Route path="analytics" element={<EmployeeAnalytics />} />
           <Route path="chat" element={<EmployeeChat />} />

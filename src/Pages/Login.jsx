@@ -7,9 +7,13 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { adminLoginAPI, adminOtpVerificationAPI, loginAPI } from "../services/allAPI";
+import {
+  adminLoginAPI,
+  adminOtpVerificationAPI,
+  loginAPI,
+} from "../services/allAPI";
 import { toast, ToastContainer } from "react-toastify";
 
 const Login = () => {
@@ -65,34 +69,35 @@ const Login = () => {
   const [activeTab, setActivetab] = useState("users");
 
   // state for otp verification
-  const [step,setStep]=useState(1);
+  const [step, setStep] = useState(1);
 
-  //function for admin login  
-  const handleAdminLogin=async()=>{
-    try{
-       if(step==1){
-          //first click send otp
-          await adminLoginAPI({
-            email:adminDetails.email,
-            password:adminDetails.password
-          })
-          toast.info("OTP send to your email");
-          setStep(2)
-       }else{
-          const result=await adminOtpVerificationAPI({
-            email:adminDetails.email,
-            otp:adminDetails.otp
-          })
-          sessionStorage.setItem("token",result.data.token);
-          navigate('/admin/dashboard');
-          setAdminDetails({email:"",password:"",otp:""});
-          setStep(1);
-       } 
-    }catch(err){
+  //function for admin login
+  const handleAdminLogin = async () => {
+    try {
+      if (step == 1) {
+        //first click send otp
+        await adminLoginAPI({
+          email: adminDetails.email,
+          password: adminDetails.password,
+        });
+        toast.info("OTP send to your email");
+        setStep(2);
+      } else {
+        const result = await adminOtpVerificationAPI({
+          email: adminDetails.email,
+          otp: adminDetails.otp,
+        });
+        sessionStorage.setItem("token", result.data.token);
+        navigate("/admin/dashboard");
+        setAdminDetails({ email: "", password: "", otp: "" });
+        setStep(1);
+      }
+    } catch (err) {
       console.log(err);
       toast.warning("Admin Login Failed");
     }
-  }
+  };
+
   return (
     <>
       <div className="max-w-full md:w-full grid grid-cols-1 md:grid-cols-2 md:h-screen">
@@ -246,7 +251,7 @@ const Login = () => {
                           Email
                         </label>
                         <input
-                          disabled={step===2}
+                          disabled={step === 2}
                           value={adminDetails.email}
                           onChange={(e) =>
                             setAdminDetails({
@@ -269,7 +274,7 @@ const Login = () => {
                           Password
                         </label>
                         <input
-                          disabled={step===2}
+                          disabled={step === 2}
                           value={adminDetails.password}
                           onChange={(e) =>
                             setAdminDetails({
@@ -295,9 +300,14 @@ const Login = () => {
                           Admin OTP
                         </label>
                         <input
-                          disabled={step==1}
+                          disabled={step == 1}
                           value={adminDetails.otp}
-                        onChange={(e)=>setAdminDetails({...adminDetails,otp:e.target.value})}
+                          onChange={(e) =>
+                            setAdminDetails({
+                              ...adminDetails,
+                              otp: e.target.value,
+                            })
+                          }
                           type="text"
                           inputMode="numeric"
                           maxLength={5}
@@ -308,9 +318,13 @@ const Login = () => {
                       </div>
                       {/* create account button */}
                       <div className="w-full">
-                          <button type="button" onClick={handleAdminLogin} className="w-full bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)] text-white rounded-lg py-4 px-3 text-lg font-bold active:opacity-80  transition duration-300">
-                            {step==1?"Send OTP":"Verify OTP"}
-                          </button>
+                        <button
+                          type="button"
+                          onClick={handleAdminLogin}
+                          className="w-full bg-[linear-gradient(135deg,hsl(262,83%,58%)0%,hsl(340,82%,65%)_100%)] text-white rounded-lg py-4 px-3 text-lg font-bold active:opacity-80  transition duration-300"
+                        >
+                          {step == 1 ? "Send OTP" : "Verify OTP"}
+                        </button>
                       </div>
                       <hr className="w-full border-gray-300 mt-4" />
                       <div className="flex justify-between items-center gap-4">
